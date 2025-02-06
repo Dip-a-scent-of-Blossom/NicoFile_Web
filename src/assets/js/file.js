@@ -13,13 +13,14 @@ export async function download(prefix,auth,path,fileName){
     const url = local+"api/v1/file/download?url="+filteredParts[0]
     await axios.get(url, {
         headers: {
-            'Authorization': auth
+            'Authorization': auth,
+            'range': 'bytes=0-'
         },
         responseType : 'arraybuffer'
     })
         .then(response => {
             if (!response.status>=400 && !response.status<500) {
-                throw new Error('Unauthorized or file not found');
+                // throw new Error('Unauthorized or file not found');
             }
             const link = document.createElement('a');
             const objectUrl = URL.createObjectURL(new Blob([response.data]));
@@ -27,6 +28,7 @@ export async function download(prefix,auth,path,fileName){
             link.setAttribute('download', fileName); // 强制指定文件名
             document.body.appendChild(link);
             link.click();
+            console.log(link)
             document.body.removeChild(link);
             URL.revokeObjectURL(objectUrl); // 释放 URL 对象
         })
@@ -108,5 +110,16 @@ export const calc = (filesize)=> {
         return (filesize / 1024 / 1024).toFixed(2) + ' MB';
     }else  {
         return (filesize / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+    }
+}
+export const fmtDownloadTimes = (times) => {
+    if (times < 1000) {
+        return times + ' 次下载';
+    } else if (times < 10000) {
+        return (times / 1000).toFixed(2) + ' 千次下载';
+    } else if (times < 1000000) {
+        return (times / 10000).toFixed(2) + ' 万次下载';
+    }else  {
+        return (times / 1000000).toFixed(2) + ' 百万次下载';
     }
 }

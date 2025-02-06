@@ -16,7 +16,7 @@ export const userStore =  defineStore('main',{
             return state.username
         },
         getUserToken(state) {
-            return userToken
+            return state.userToken
         },
         getLogined(state) {
             return state.logined

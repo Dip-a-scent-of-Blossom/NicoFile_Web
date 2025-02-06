@@ -11,6 +11,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       default: true,
+      meta: { requiresAuth: true },
       component: HomeView,
     },
     {
@@ -23,11 +24,23 @@ const router = createRouter({
       name: 'register',
       component:RegisterView,
     },{
-      path: '/usr/:id',
-        name: 'user',
+      path: '/user',
+      name: 'user',
+      meta: { requiresAuth: true },
       component:UserView,
     }
   ],
 })
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  if ( (to.name === 'login' || to.name==='register') && token!==null) {
+    next('/'); // 如果已经登录
+  }
+  else if (to.meta.requiresAuth && !token) {
+    next('/login'); // 如果需要登录且没有 token，跳转到登录页面
+  } else {
+    next(); // 否则继续导航
+  }
+});
 
 export default router

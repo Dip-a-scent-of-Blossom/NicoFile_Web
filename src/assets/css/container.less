@@ -1,8 +1,31 @@
+@import "color.less";
 // 通用样式
+
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+span{
+  color: @font-color;
+}
+h1{
+    color: @font-color;
+}
+h2{
+    color: @font-color;
+}
+h3{
+    color: @font-color;
+}
+
 a {
   text-decoration: none;
 }
 
+*,::after,::before {
+  box-sizing: inherit
+}
 
 
 .has-text-centered {
@@ -19,10 +42,128 @@ a {
 .is-size-7 { font-size: 0.75rem !important; }
 
 
+.nav-shadow {
+  box-shadow: 0 2px 3px rgba(26, 26, 26, .1);
+}
+
+.container {
+  display: block;
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  width: auto;
+
+  &.is-fluid {
+    max-width: none !important;
+    padding-left: 32px;
+    padding-right: 32px;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 1024px) {
+    max-width: 960px;
+  }
+
+  @media screen and (max-width: 1215px) {
+    &.is-widescreen:not(.is-max-desktop) {
+      max-width: 1152px;
+    }
+  }
+
+  @media screen and (max-width: 1407px) {
+    &.is-fullhd:not(.is-max-desktop):not(.is-max-widescreen) {
+      max-width: 1344px;
+    }
+  }
+
+
+  @media screen and (min-width: 1216px) {
+    &:not(.is-max-desktop) {
+      max-width: 1152px;
+    }
+  }
+
+  @media screen and (min-width: 1408px) {
+    &:not(.is-max-desktop):not(.is-max-widescreen) {
+      max-width: 1344px;
+    }
+  }
+  @media screen and (min-width: 1680px) {
+    &:not(.is-max-desktop):not(.is-max-desktop) {
+      max-width: 1612px;
+    }
+  }
+}
+
+
+.columns {
+  margin-left: -.75rem;
+  margin-right: -.75rem;
+
+  @media screen and (min-width: 769px), print {
+    &:not(.is-desktop) {
+      display: flex;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    &.is-desktop {
+      display: flex;
+    }
+  }
+}
+
+
+.label {
+  margin-bottom: .5em;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: .75rem;
+}
+
+.buttons {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.normal-container{
+  margin: auto;
+  max-width: 1200px;
+  padding: 16px 16px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  display: block;
+}
+
+
+.box {
+  background-color: @theme-second-color-light;
+  border-radius: 6px;
+  box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02);
+  color: #4a4a4a;
+  display: block;
+  padding: 2.45rem
+}
+
+a.box:focus,a.box:hover {
+  box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px #485fc7
+}
+
+a.box:active {
+  box-shadow: inset 0 1px 2px rgba(10,10,10,.2),0 0 0 1px #485fc7
+}
+
 
 // Navbar 基础样式
 .navbar {
-  background-color: #fff;
+  background-color: @theme-background-color-light;
   min-height: 3.25rem;
   position: relative;
   z-index: 30;
@@ -62,7 +203,6 @@ a {
   }
 }
 
-// Navbar 品牌和标签
 .navbar-brand,
 .navbar-tabs {
   align-items: stretch;
@@ -86,6 +226,21 @@ a {
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+
+.navbar-burger {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: 0 0;
+  border: none;
+  color: currentColor;
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0;
+  padding: 0
+}
+
 
 // Navbar 汉堡菜单
 .navbar-burger {
@@ -151,7 +306,7 @@ a {
 // Navbar 项和链接
 .navbar-item,
 .navbar-link {
-  color: #4a4a4a;
+  color: @font-color;
   display: block;
   line-height: 1.5;
   padding: 0.5rem 0.75rem;
@@ -171,8 +326,8 @@ a.navbar-item {
   &:focus,
   &:focus-within,
   &:hover {
-    background-color: #fafafa;
-    color: #485fc7;
+    background-color: @theme-second-color;
+    color: @focus-color;
   }
 }
 
@@ -221,17 +376,6 @@ a.navbar-item {
   flex-shrink: 1;
 }
 
-// Navbar 链接箭头
-.navbar-link:not(.is-arrowless) {
-  padding-right: 2.5em;
-
-  &::after {
-    border-color: #485fc7;
-    margin-top: -0.375em;
-    right: 1.125em;
-  }
-}
-
 // Navbar 下拉菜单
 .navbar-dropdown {
   font-size: 0.875rem;
@@ -271,8 +415,8 @@ a.navbar-item {
     }
 
     .navbar-menu {
-      background-color: #fff;
-      box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);
+      background-color: @theme-background-color;
+      box-shadow: 0 8px 16px rgba(10, 10, 10, 0.7);
       padding: 0.5rem 0;
 
       &.is-active {
@@ -368,13 +512,13 @@ a.navbar-item {
         a.navbar-item {
           &:focus,
           &:hover {
-            background-color: #f5f5f5;
-            color: #0a0a0a;
+            background-color: @theme-background-color;
+            color: @font-color;
           }
 
           &.is-active {
-            background-color: #f5f5f5;
-            color: #485fc7;
+            background-color: @theme-background-color;
+            color: @font-color;
           }
         }
       }
@@ -410,7 +554,7 @@ a.navbar-item {
     }
 
     .navbar-dropdown {
-      background-color: #fff;
+      background-color: @theme-background-color;
       border-bottom-left-radius: 6px;
       border-bottom-right-radius: 6px;
       border-top: 2px solid #dbdbdb;
@@ -433,13 +577,13 @@ a.navbar-item {
 
         &:focus,
         &:hover {
-          background-color: #f5f5f5;
-          color: #0a0a0a;
+          background-color: @theme-second-color;
+          color: @font-color;
         }
 
         &.is-active {
-          background-color: #f5f5f5;
-          color: #485fc7;
+          background-color: @theme-background-color;
+          color: @font-color;
         }
       }
 
@@ -531,7 +675,11 @@ a.navbar-item {
     &.is-active .navbar-link,
     &:focus .navbar-link,
     &:hover .navbar-link {
-      background-color: #fafafa;
+      animation-timeline: auto;
+      animation-range-start: normal;
+      animation-range-end: normal;
+      animation: 0.6s ease 0.4s 1 normal backwards running slide-in;
+      background-color: @theme-second-color;
     }
   }
 }

@@ -1,112 +1,91 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 
 import UploadFile from "@/components/UploadFile.vue";
 import {auth, download, local, uploading} from "@/assets/js/file.js";
-import item from "jsdom/lib/jsdom/living/helpers/validate-names.js";
 import {userStore} from "@/assets/js/store.js";
 import {jwtDecode} from "jwt-decode";
+import axios from "axios";
+import Router from "@/router/index.js";
+import Header from "@/components/side/header.vue";
 
-const dialogVisible = ref(false)
 const user = userStore()
 const handleClose = (done  ) => {
   done()
 }
 const uploadfile = ref(null)
-onMounted(() => {
-    let token =  localStorage.getItem("token")
-    if (token === null){
-        return
-    }
-    let jwtvalue = jwtDecode(token)
-    user.setNew(localStorage.getItem("token"),"","",jwtvalue.id)
-})
 
+const isActive = ref(false)
+
+
+
+onBeforeMount(async () => {
+  let token =  localStorage.getItem("token")
+  if (token !== null) {
+    try{
+      const res =await axios.post(local + "api/v1/user/loadtoken", {
+      },{
+        headers: {
+          "Authorization": token,
+        }
+      })
+      console.log(token)
+      let jwtDecodeVal = jwtDecode(token);
+      if (res.status === 200) {
+        if (res.data.error===false){
+          user.setNew(token,res.data.username,'',jwtDecodeVal.id)
+        }else{
+          user.$reset()
+          Router.push("/login")
+        }
+      }else{
+        user.$reset()
+        Router.push("/login")
+      }
+    }catch( error){
+      user.$reset()
+      Router.push("/login")
+    }
+  }
+
+})
 </script>
 
 <template>
-  <el-header style="margin: 0 0" class="navbar nav-shadow">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item is-size-5" href="/" style="font-weight: bold">
-          文件托管
-        </a>
-      </div>
-      <div id="mainNavbar" class="navbar-menu">
-        <div class="navbar-start">
-          <router-link to="/" class="navbar-item is-size-6">首页</router-link>
-        </div>
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <el-badge :value="uploading"
-                      :show-zero="false">
-              <a  @click="dialogVisible = true" style="cursor: pointer" >
-                <span style="background-color: #eeeeee;padding: 3px 6px;display: block" class="is-size-6" >
-                  上传
-                </span>
-              </a>
-            </el-badge>
-
-            <el-dialog
-                v-model="dialogVisible"
-                title="Tips"
-                width="600"
-                :before-close="handleClose"
-            >
-              <UploadFile ref="uploadfile" ></UploadFile>
-              <template #footer>
-              </template>
-            </el-dialog>
-            <div v-if="user.logined && user.userToken!==''">
-              <router-link :to="'/user/:'+user.id" class="navbar-item">
-                <span style="padding: 3px 6px;display: block" class="is-size-6">
-                  {{user.username}}
-                </span>
-              </router-link>
-            </div>
-            <div v-else>
-              <router-link to="/login" class="navbar-item">
-                <span style="background-color: #eeeeee;padding: 3px 6px;display: block" class="is-size-6">
-                  登录
-                </span>
-              </router-link>
-            </div>
-          </div>
-        </div>
-
-      </div>
+<div id="content" style="display: flex;flex-direction: column;">
 
 
-    </div>
-
+  <el-header style="margin: 0 0;z-index: 101" class="navbar nav-shadow" >
+    <Header></Header>
   </el-header>
-  <div>
+  <div class="container fill-height" style="width: 100%;transition: all 0.3s ease;min-height:calc(100vh - 5em) ">
 
     <router-view v-slot="{ Component, route, Path }">
       <keep-alive v-if="route.meta.keepAlive">
-        <component :is="Component"  />
+        <component :is="Component" v-if="!route.meta.requireAuth || user.logined" />
       </keep-alive>
       <component v-else :is="Component" />
 
     </router-view>
 
   </div>
-  <footer class="footer" style="background-color: white">
+  <footer class="footer" style="background-color: rgba( 33,35,42,0.5)">
     <div class="content has-text-centered">
       <span>
-         <a style="color:#368CCB;" href="https://github.com/ManInM00N/NicoFile">Nico File v0.0.0</a> 由 <a style="color:#368CCB;" href="https://github.com/ManInM00N">ManInM00N</a> 构建
+         <a  href="https://github.com/ManInM00N/NicoFile">Nico File v0.0.0</a> 由 <a style="color:#368CCB;" href="https://github.com/ManInM00N">ManInM00N</a> 构建
       </span>
       <br/>
-      <span>
-        Copyright © 2024 by ※ ManInM00N ※ , All rights reserved.
+      <span >
+        Copyright © 2024 by ManInM00N , All rights reserved.
       </span>
-
     </div>
   </footer>
+</div>
 </template>
 
 <style lang="less" scoped>
 @import "assets/css/container.less";
+@import "assets/css/color.less";
 .red-dot {
   color: #f56c6c;
   font-size: 14px;
@@ -114,8 +93,31 @@ onMounted(() => {
   display: inline-block;
 }
 
-
+nav {
+  margin-bottom: 16px;
+}
 .footer {
   padding: 1.5rem 1.5rem 2rem;
+}
+::v-deep .drawer{
+  width: min(250px,80%) !important;
+}
+.fill-height {
+  min-height: max(100%,100vh);
+}
+
+#content:before{
+  background-size: cover;
+  background: url("@/assets/81845735_p0.jpg") no-repeat center;
+  z-index: -2;
+  opacity: 1;
+  transition: opacity .5s ease;
+  content: '';
+  display: block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 </style>

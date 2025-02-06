@@ -185,6 +185,8 @@ defineExpose({
 </template>
 
 <style lang="less" scoped>
+@import "../assets/css/color.less";
+
 .file-item {
   display: flex;
   align-items: center;
