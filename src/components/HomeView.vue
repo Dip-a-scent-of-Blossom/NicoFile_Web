@@ -13,7 +13,6 @@ import Router from "@/router/index.js";
 import RecommendArtcle from "@/components/side/recommendArtcle.vue";
 const user = userStore()
 const FindList = ref([])
-let auth666 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjIsImV4cCI6MTczODczODM1NSwiaWF0IjoxNzM4MTM0NzU1fQ.Xpv0ZN1vgZVI9HWX1OgNcL3jWp4NgmMsgfFr2xIe_xA"
 const auth = ref('')
 async function GetFileList() {
 
@@ -48,7 +47,7 @@ onMounted(async () => {
         <div v-for="(item,index) in FindList" :key="item.id" class="file" >
           <div slot="header"  style="margin-bottom: 8px">
                 <span @click="()=>{download(local,auth,item.path,item.name)}" font-bold="true" style="font-size: x-large;color:#368CCB;font-weight: 520;cursor: pointer;">
-                {{item.name}}
+                {{item.name==='null'?'已注销用户':item.name}}
                 </span>
           </div>
           <div style="display: flex;flex-direction: row;margin-bottom: 8px" id="tags">
@@ -79,7 +78,7 @@ onMounted(async () => {
             <el-button class="single-button"  size="default"   @click="()=>{download(local,user.getUserToken,item.path,item.name)}" style="padding-left: 2px;padding-right: 2px">
               <el-icon size=28 color="#40E0D0"><Download /></el-icon>
             </el-button>
-            <el-button  class="single-button"  size="default"  @click="()=>{deletefile(local,item.id,auth);GetFileList()}" style="padding-left: 2px;padding-right: 2px" >
+            <el-button  class="single-button"  size="default"  @click="async ()=>{await deletefile(local,item.id,auth);await GetFileList()}" style="padding-left: 2px;padding-right: 2px" >
               <el-icon size=28 color="#FF0000"><Delete /></el-icon>
             </el-button>
           </div>
@@ -124,7 +123,7 @@ onMounted(async () => {
   padding: 0;
 }
 .single-button{
-    background-color: @theme-second-color;
+    background-color: transparent;
     border: @border-color;
 }
 .fill-height{

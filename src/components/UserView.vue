@@ -83,8 +83,8 @@ const updatePassword = async () => {
                               <span class="is-size-6 " style="font-weight: 600;">更改账户名称</span>
                             </template>
                             <el-input v-model="form.newUsername" placeholder="请输入新的用户名" >
-                              <template #append >
-                                <el-button slot="append" color="#373b44" @click="updateUsername">
+                              <template #append class="el-input-group__append" >
+                                <el-button slot="append" color="#48a548" @click="updateUsername">
                                   提交
                                 </el-button>
                               </template>
@@ -163,10 +163,18 @@ const updatePassword = async () => {
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
 
-::v-deep .el-input-group__append{
-  background-color: #F0FFF0;
+:deep .el-tabs__item.is-active, .el-tabs__item:hover {
+  color: @theme-highlight-color;
+}
+
+:deep .el-input-group__append{
+  background-color: #48a548;
   color:#000000;
 }
+:deep .el-tabs__active-bar {
+  background-color: @theme-highlight-color;
+}
+
 .table-container {
   -webkit-overflow-scrolling: touch;
   overflow: auto;
@@ -177,5 +185,7 @@ const updatePassword = async () => {
   --el-input-bg-color: @theme-background-color-light;
   --el-input-text-color: @font-color;
   --el-input-border-color: @border-color  ;
+  --el-input-focus-border-color: @theme-highlight-color;
 }
+
 </style>

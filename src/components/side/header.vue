@@ -65,14 +65,14 @@ const drawer = ref(false)
         :with-header="false"
         :before-close="handleClose"
         class="drawer"
-        style="padding:8px 8px;--el-drawer-padding-primary: 0"
+        style="--el-drawer-padding-primary: 0"
     >
-      <div id="mainNavbar" class="navbar-menu is-active" >
+      <div id="mainNavbar" class="navbar-menu is-active" style="background-color: transparent;height: 100%" >
         <div class="navbar-start">
           <router-link to="/" class="navbar-item is-size-6">首页</router-link>
           <el-divider style="margin:auto"></el-divider>
           <router-link to="/" class="navbar-item is-size-6">文件</router-link>
-          <a v-if="user.logined && user.userToken!==''"  @click="dialogVisible = true" style="cursor: pointer"  class="navbar-item">
+          <a v-if="user.logined && user.userToken!==''"  @click="dialogVisible = true" style="cursor: pointer"  class="navbar-item ">
             <el-badge :value="uploading"
                       :show-zero="false"  >
             <span style="display: block" class="is-size-6" >
@@ -114,13 +114,13 @@ const drawer = ref(false)
         <router-link to="/" class="navbar-item is-size-6">首页</router-link>
       </div>
       <div class="navbar-end" style="background-color: transparent">
-        <div class="navbar-item" style="background-color: transparent">
+        <div class="navbar-item" style="">
           <el-badge :value="uploading"
                     :show-zero="false">
-            <a  class="navbar-link"  @click="dialogVisible = true" style="cursor: pointer;" >
-                <span style="padding: 7px 8px;display: block" class="is-size-6" >
+            <a  class="navbar-link is-size-6"  @click="dialogVisible = true" style="cursor: pointer;display: block;padding:0 0 " >
+<!--                <span style="" class=""  >-->
                   上传
-                </span>
+<!--                </span>-->
             </a>
           </el-badge>
         </div>
@@ -128,34 +128,35 @@ const drawer = ref(false)
 
         <div class="navbar-item has-dropdown is-hoverable" v-if="user.logined && user.userToken!==''">
 
-          <el-dropdown :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">
-            <a style="padding: 3px 6px;display: block;outline: none !important;display: flex;align-items: center;" class="is-size-6 navbar-link">
+          <el-dropdown class="" :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">
+            <a style="padding: 3px 6px; outline: none !important;display: flex;align-items: center;" class="is-size-6 navbar-link">
               {{ cutName(user.username)}}
-
               <el-icon color="#ffffff">
                 <ArrowDown color="#ffffff"   />
               </el-icon>
             </a>
             <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item  class="is-size-6">
+              <el-dropdown-menu class="header-new-drop">
+                <el-dropdown-item  class="is-size-6 " >
                   <router-link to="/user">
                     个人中心
                   </router-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="()=>{Router.push('/user')}" class="is-size-6">
-                  <router-link to="/user">
+                  <router-link  to="/user">
                     系统管理
                   </router-link>
                 </el-dropdown-item>
-                <el-dropdown-item  class="is-size-6">
+                <el-dropdown-item  class="is-size-6 ">
                   <a href="https://github.com/ManInM00N/NicoFile" >
                     项目地址
                   </a>
                 </el-dropdown-item>
                 <el-divider style="margin:auto"></el-divider>
                 <el-dropdown-item @click="clear()" class="is-size-6">
-                  退出
+                  <span style="width: 100%">
+                    退出
+                  </span>
                 </el-dropdown-item>
               </el-dropdown-menu>
 
@@ -183,4 +184,49 @@ const drawer = ref(false)
 <style scoped lang="less">
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
+
+::v-deep .drawer{
+  width: min(250px,80%) !important;
+  --el-drawer-bg-color: @theme-background-color-light;
+  padding: 0 0;
+}
+
+.header-new-drop {
+  border: 0px solid #00487f !important;
+  border-radius: 5px;
+  padding: 0 0;
+  background-color: @theme-second-color;
+  :deep div {    // 注意：这里转深度书写样式修改它的 div 下方 after 样式
+    &:after {
+      border-bottom-color: rgba(0, 0, 0, 0.75)!important;
+    }
+  }
+}
+
+
+</style>
+
+<style lang="less">
+@import "@/assets/css/container.less";
+@import "@/assets/css/color.less";
+
+
+
+.el-dropdown-menu {
+  background-color: @theme-second-color ;
+  border: 0px solid #00487f !important;
+  border-radius: 5px;
+  padding:0 0;
+}
+.el-dropdown-menu__item {
+
+  color: #f0f000!important;
+  line-height: 40px!important;
+  padding: 0 26px!important;
+  &:not(.is-disabled):focus,:not(.is-disabled):hover,:not(.is-disabled):focus,:not(.is-disabled):active {
+    background-color: @theme-second-color-light!important;
+    color: @focus-color;
+      border:2px solid @theme-highlight-color solid!important;
+  }
+}
 </style>

@@ -35,14 +35,17 @@ onBeforeMount(async () => {
         if (res.data.error===false){
           user.setNew(token,res.data.username,'',jwtDecodeVal.id)
         }else{
+          localStorage.removeItem("token")
           user.$reset()
           Router.push("/login")
         }
       }else{
+        localStorage.removeItem("token")
         user.$reset()
         Router.push("/login")
       }
     }catch( error){
+      localStorage.removeItem("token")
       user.$reset()
       Router.push("/login")
     }
@@ -99,9 +102,7 @@ nav {
 .footer {
   padding: 1.5rem 1.5rem 2rem;
 }
-::v-deep .drawer{
-  width: min(250px,80%) !important;
-}
+
 .fill-height {
   min-height: max(100%,100vh);
 }

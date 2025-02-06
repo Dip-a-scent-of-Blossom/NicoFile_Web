@@ -1,5 +1,6 @@
 import axios from "axios";
 import {ref} from "vue";
+import {ElNotification} from "element-plus";
 export const uploading = ref(0)
 export const auth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsImV4cCI6MTczODc1MDkyOSwiaWF0IjoxNzM4MTQ3MzI5fQ.nPhzH5kNBMaEAelUf9kDa_kftdHJ2ZA1r4uDRa-ZLag"
 export const useable = ref(false)
@@ -36,12 +37,55 @@ export async function download(prefix,auth,path,fileName){
 }
 
 export const deletefile = async (prefix,fileid,auth) => {
-    const res = await axios.delete(prefix + "api/v1/file/delete?fileid="+fileid,{
-            headers: {
-                "Authorization": auth,
+    let res = null
+    try {
+        res = await axios.delete(prefix + "api/v1/file/delete?fileid="+fileid,{
+                headers: {
+                    "Authorization": auth,
+                }
             }
+        )
+    }catch (e) {
+        console.log(e)
+        res = e
+    }finally {
+        if (res.status === 200) {
+                if (res.data.error ===true){
+
+                    ElNotification({
+                        title: '删除失败',
+                        message: res.data.message,
+                        type: 'error',
+                        position: 'bottom-right'
+                    })
+                }else{
+
+                    ElNotification({
+                        title: '删除成功',
+                        message: '文件删除成功',
+                        type: 'success',
+                        position: 'bottom-right'
+                    })
+                }
+        }else if (res.status === 401) {
+            ElNotification({
+                title: '删除失败',
+                message: '权限不足',
+                type: 'error',
+                position: 'bottom-right'
+            })
         }
-    )
+        else {
+            ElNotification({
+                title: '删除失败',
+                message: '出现未知错误',
+                type: 'error',
+                position: 'bottom-right'
+            })
+        }
+    }
+
+
     console.log(res.data.message)
     return res
 }
