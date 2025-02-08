@@ -163,14 +163,10 @@ const drawer = ref(false)
             </template>
           </el-dropdown>
         </div>
-        <div v-else>
-          <div class="navbar-item">
-            <router-link to="/login" class="navbar-item">
-                <span style="background-color: #eeeeee;padding: 3px 6px;display: block" class="is-size-6">
+        <div v-else class="navbar-item">
+            <router-link to="/login" class="navbar-link" style="background-color: transparent">
                   登录
-                </span>
             </router-link>
-          </div>
         </div>
       </div>
 

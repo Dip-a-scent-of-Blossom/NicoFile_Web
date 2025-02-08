@@ -4,7 +4,8 @@ import {userStore} from "@/assets/js/store.js";
 import {ElNotification} from "element-plus";
 import axios from "axios";
 import {local} from "@/assets/js/file.js";
-import {ChangeUserName, ChangeUserPassword} from "@/assets/js/user.js";
+import {ChangeUserName, ChangeUserPassword, DeleteUser} from "@/assets/js/user.js";
+import Router from "@/router/index.js";
 const user = userStore()
 const activeName = ref('first')
 
@@ -45,6 +46,28 @@ const updatePassword = async () => {
   }else {
     ElNotification({
       title: '密码更新失败',
+      message: res.message,
+      type: 'error',
+      position: 'bottom-right',
+    });
+  }
+}
+const DeleteUserHandle =async () => {
+  let res = await DeleteUser()
+  if (res.success){
+
+    ElNotification({
+      title: '注销成功',
+      message: '您已经成功注销',
+      type: 'success',
+      position: 'bottom-right',
+    });
+    localStorage.removeItem("token")
+    user.$reset()
+    Router.push("/login")
+  }else{
+    ElNotification({
+      title: '注销失败',
       message: res.message,
       type: 'error',
       position: 'bottom-right',
@@ -116,7 +139,7 @@ const updatePassword = async () => {
                         </span>
                       </label>
                       <div class="buttons">
-                        <el-button  color="#ee827c">
+                        <el-button  color="#ee827c" @click="DeleteUserHandle">
                           注销
                         </el-button>
                       </div>

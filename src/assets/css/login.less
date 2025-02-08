@@ -1,3 +1,4 @@
+@import "color.less";
 
 .register-wrapper {
   min-height: 93.5vh;
@@ -10,7 +11,7 @@
 .register-container {
   width: 100%;
   max-width: 480px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f0 100%);
+  background: @theme-second-color-light;
 
   border-radius: 20px;
   padding: 40px;
@@ -29,11 +30,10 @@
 .login-container {
   width: 100%;
   max-width: 480px;
-  background: linear-gradient(135deg, #f5f7fa 0%,#f0f2f0 100%);
+  background: @theme-second-color-light;
 
   border-radius: 20px;
   padding: 40px;
-  padding-right: 80px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
@@ -43,14 +43,14 @@
 }
 
 .form-header h2 {
-  color: #2c3e50;
+  color: @font-color;
   font-size: 32px;
   margin-bottom: 10px;
   font-weight: 700;
 }
 
 .form-header p {
-  color: #95a5a6;
+  color: @font-color;
   font-size: 16px;
 }
 
@@ -69,23 +69,24 @@
   position: relative;
   margin-bottom: 30px;
   input {
-    width: 100%;
+    width: calc(100% - 30px);
     padding: 15px;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
     font-size: 16px;
     transition: all 0.3s ease;
     background: transparent;
-
+    color: @font-color;
     &:focus,
-    &:valid {
-      border-color: #3498db;
+    &:active{
+      outline: 2px solid @theme-highlight-color;
+      border-color: transparent;
     }
     &:focus + label,
     &:valid + label {
       top: -12px !important;
       font-size: 14px;
-      color: #3498db;
+      color: @theme-highlight-color;
     }
   }
   label {
@@ -95,7 +96,7 @@
     transform: translateY(-50%);
     background: white;
     padding: 0 5px;
-    color: #95a5a6;
+    color: #f0f0f0;
     font-size: 16px;
     transition: all 0.3s ease;
     pointer-events: none;
@@ -103,10 +104,10 @@
 }
 
 .submit-btn {
-  width: 100%;
+  width: calc( 100% - 30px );
   padding: 15px;
-  margin-left: 15px;
-  background: linear-gradient(to right, #3498db, #2980b9);
+  //margin-left: 15px;
+  background: linear-gradient(to right, #7fecad, #2edfa3);
   color: white;
   border: none;
   border-radius: 12px;
@@ -120,6 +121,7 @@
   gap: 10px;
   :hover {
     transform: translateY(-2px);
+    //animation-delay: 0.2s;
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
   }
 }
