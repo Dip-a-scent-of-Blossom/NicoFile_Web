@@ -33,7 +33,7 @@ const drawer = ref(false)
 <template>
   <el-dialog
       v-model="dialogVisible"
-      title="Tips"
+      title="文件上传"
       width="600"
       :before-close="handleClose"
   >
@@ -205,11 +205,11 @@ const drawer = ref(false)
 <style lang="less">
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
-
+@import "@/assets/css/elOverWrite.less";
 
 
 .el-dropdown-menu {
-  background-color: @theme-second-color ;
+  background-color: @theme-second-color-light ;
   border: 0px solid #00487f !important;
   border-radius: 5px;
   padding:0 0;
@@ -220,7 +220,7 @@ const drawer = ref(false)
   line-height: 40px!important;
   padding: 0 26px!important;
   &:not(.is-disabled):focus,:not(.is-disabled):hover,:not(.is-disabled):focus,:not(.is-disabled):active {
-    background-color: @theme-second-color-light!important;
+    background-color: @theme-second-color-light !important;
     color: @focus-color;
       border:2px solid @theme-highlight-color solid!important;
   }

@@ -185,7 +185,7 @@ const DeleteUserHandle =async () => {
 <style scoped lang="less">
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
-
+@import "@/assets/css/elOverWrite.less";
 :deep .el-tabs__item.is-active, .el-tabs__item:hover {
   color: @theme-highlight-color;
 }

@@ -6,11 +6,11 @@ const user = userStore()
 const article = ref([
   {
     title: '文章标题a',
-    link: '/article/1',
+    link: '/?p=1',
   },
   {
     title: '文章标题b',
-    link: '/article/2',
+    link: '/?p=2',
   },
 ])
 onMounted(async () => {

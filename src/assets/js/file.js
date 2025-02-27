@@ -8,13 +8,14 @@ const server = "http://152.32.133.174:7235/"
 const local1 = "http://127.0.0.1:8888/"
 export const local = local1
 export async function download(prefix,auth,path,fileName){
-    const pathParts = path.split('/');
-    const filteredParts = pathParts.filter(part => part !== '');
-    console.log("filteredParts",filteredParts[0])
-    const url = local+"api/v1/file/download?url="+filteredParts[0]
+    // const pathParts = path.split('/');
+    // const filteredParts = pathParts.filter(part => part !== '');
+    // console.log("filteredParts",filteredParts[0])
+    // const url = local+"api/v1/file/download?url="+filteredParts[0]
+    const url = local+"api/v1/file/download?url="+path
     await axios.get(url, {
         headers: {
-            'Authorization': auth,
+            'Authorization':  localStorage.getItem("token"),
             'range': 'bytes=0-'
         },
         responseType : 'arraybuffer'
@@ -36,12 +37,12 @@ export async function download(prefix,auth,path,fileName){
         .catch(error => console.error('There was a problem with the download:', error));
 }
 
-export const deletefile = async (prefix,fileid,auth) => {
+export const deletefile = async (prefix,fileid) => {
     let res = null
     try {
         res = await axios.delete(prefix + "api/v1/file/delete?fileid="+fileid,{
                 headers: {
-                    "Authorization": auth,
+                    "Authorization":  localStorage.getItem("token"),
                 }
             }
         )
@@ -90,7 +91,7 @@ export const deletefile = async (prefix,fileid,auth) => {
     return res
 }
 
-export async function checkchunk(prefix,chunkTotal, fileName,md5arr,fileMd5,Ext,auth) {
+export async function checkchunk(prefix,chunkTotal, fileName,md5arr,fileMd5,Ext) {
     const resp = await axios.post(prefix+"api/v1/file/checkchunk", {
         chunkNum: chunkTotal,
         filename: fileName,
@@ -99,23 +100,24 @@ export async function checkchunk(prefix,chunkTotal, fileName,md5arr,fileMd5,Ext,
         ext : Ext
     },{
         headers: {
-            "Authorization": auth,
+            "Authorization":  localStorage.getItem("token"),
         }
     })
+
     return resp.data
 }
-export const uploadFileToServer = async (prefix,auth,file, chunkNumber, fileName,_md5) => {
+export const uploadFileToServer = async (prefix,file, chunkNumber, fileName,_md5,ext) => {
     let form = new FormData();
     form.append("chunk", file);
     form.append("chunkIndex", chunkNumber);
     form.append("md5", _md5);
     form.append("filename", fileName);
-    console.log(_md5,chunkNumber)
+    form.append("ext", ext);
+    console.log(_md5,"chunkNumber: ",chunkNumber)
     var result
     await axios.post(prefix+"api/v1/file/uploadchunk", form,{
         headers: {
-            "Authorization": auth,
-            'Connection': 'keep-alive',
+            "Authorization":  localStorage.getItem("token"),
         },
     }).then(res => {
         result = res
@@ -128,7 +130,7 @@ export const uploadFileToServer = async (prefix,auth,file, chunkNumber, fileName
     return result
 }
 
-export const mergeFiles = async (prefix,auth,fileMd5,chunkTotal, fileName,ext,size) => {
+export const mergeFiles = async (prefix,fileMd5,chunkTotal, fileName,ext,size) => {
     console.log("merge chunks: ",chunkTotal)
     const result =await axios.post(prefix+"api/v1/file/mergechunk", {
         chunkNum: chunkTotal,
@@ -139,7 +141,7 @@ export const mergeFiles = async (prefix,auth,fileMd5,chunkTotal, fileName,ext,si
         description :''
     },{
         headers: {
-            "Authorization": auth,
+            "Authorization":  localStorage.getItem("token"),
         }
     })
     return result

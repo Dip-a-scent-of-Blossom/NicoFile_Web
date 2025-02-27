@@ -1,7 +1,7 @@
-<script setup>
+<script setup xmlns="http://www.w3.org/1999/html">
 import {ref} from "vue";
 import {getFileMd5, sleep} from "@/assets/js/encyrpt.js";
-import {checkchunk, mergeFiles, uploadFileToServer, auth, local, useable,uploading} from "@/assets/js/file.js";
+import {checkchunk, mergeFiles, uploadFileToServer,  local, useable,uploading} from "@/assets/js/file.js";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {ElNotification} from "element-plus";
 
@@ -56,12 +56,12 @@ async function CalcFile(file, filelist) {
 }
 
 const merge = async ()=>{
-  const res = await mergeFiles(local,auth,fileMd5.value,chunktotals.value, filename.value,Ext.value,size.value)
+  const res = await mergeFiles(local,fileMd5.value,chunktotals.value, filename.value,Ext.value,size.value)
   return res
 }
 const submit = async () => {
   useable.value = false
-  uploading.value ++
+  progress.value = 0
   let uploadFile = fileList.value[0]
   if (chunktotals.value > 0) {
     let md5arr = []
@@ -72,15 +72,39 @@ const submit = async () => {
       md5arr.push(_md5)
     }
     // 检查文件切片上传进度
-    const resp = await checkchunk(local,chunktotals.value, filename.value,md5arr,fileMd5.value,Ext.value,auth)
+    const resp = await checkchunk(local,chunktotals.value, filename.value,md5arr,fileMd5.value,Ext.value)
+    if (resp ===null){
+      ElNotification({
+        title: '上传失败',
+        message: '网络错误',
+        type: 'error',
+        position: 'bottom-right'
+      })
+      useable.value = true
+      return
+    }
     console.log("Total Chunks: ",chunktotals.value,resp)
+    if (chunktotals.value === resp.accept && resp.message==="文件已存在"){
+      progress.value = 100
+      ElNotification({
+        title: '上传成功',
+        message: '文件已存在',
+        type: 'info',
+        position: 'bottom-right'
+      })
+      uploading.value --
+      useable.value = true
+      handleRemove(fileList[0])
+      return
+    }
     hasupload.value = resp.accept * chunkSize
     // 继续上传
+    uploading.value ++
     for (let chunkNumber = resp.accept, start = resp.accept*chunkSize; chunkNumber < chunktotals.value && !useable.value; chunkNumber++, start += chunkSize) {
       let end = Math.min(size.value, start + chunkSize);
       const files = uploadFile.raw.slice(start, end)
       console.log(files,start,end)
-      const result = await uploadFileToServer(local,auth,files, chunkNumber , filename.value,md5arr[chunkNumber])
+      const result = await uploadFileToServer(local,files, chunkNumber , filename.value,md5arr[chunkNumber],Ext.value)
       if (result.status !== 200) {
         console.log(result.data,result)
         progress.value = 0
@@ -104,13 +128,22 @@ const submit = async () => {
     progress.value = 100
     progressNow.value = "上传完成"
     let res = await merge()
-    console.log(res.data)
-    ElNotification({
-      title: '上传成功',
-      message: '文件上传成功',
-      type: 'success',
-      position: 'bottom-right'
-    })
+    if (res.data.error === true) {
+      ElNotification({
+        title: '上传失败',
+        message: res.data.message,
+        type: 'error',
+        position: 'bottom-right'
+      })
+    }else{
+      ElNotification({
+        title: '上传成功',
+        message: '文件上传成功',
+        type: 'success',
+        position: 'bottom-right',
+      })
+    }
+
   }
   handleRemove(fileList[0])
   uploading.value = 0
@@ -141,11 +174,13 @@ defineExpose({
       :on-remove="RemoveFile"
   >
     <template #trigger >
-      <el-icon size="50"><upload-filled /></el-icon>
+      <el-icon size="50" color="gray"><upload-filled /></el-icon>
       <div class="el-upload__text">拖拽文件到这里，或 <em>点击上传</em></div>
     </template>
 
-  </el-upload>
+  </el-upload
+
+  >
   <div v-if="oncalcing">
     <span>
       计算文件md5值......(文件越大用时越久，可能会出现卡顿)
@@ -160,11 +195,13 @@ defineExpose({
     </div>
   </div>
   <br/>
-  <div>
+  <div
+      v-if="uploading"
+
+  >
 
     <br/>
     <el-progress
-        v-if="uploading"
         :text-inside="true"
         :percentage="progress"
         striped
@@ -186,7 +223,7 @@ defineExpose({
 
 <style lang="less" scoped>
 @import "../assets/css/color.less";
-
+@import "@/assets/css/elOverWrite.less";
 .file-item {
   display: flex;
   align-items: center;

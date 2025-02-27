@@ -10,29 +10,51 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {userStore} from "@/assets/js/store.js";
 import Router from "@/router/index.js";
+import Route from "@/router/index.js";
 import RecommendArtcle from "@/components/side/recommendArtcle.vue";
 const user = userStore()
 const FindList = ref([])
 const auth = ref('')
-async function GetFileList() {
+const totPage = ref(1)
+const currentPage = ref(1)
+const pagesize = ref(10)
+async function handleCurrentChange(val) {
+  // await Router.push("/?p=" + val)
+  await Route.push({path:'/list',query: {p:val}})
 
+  // await GetFileList(val)
+}
+async function GetFileList(page) {
   const res = await axios.post(local + "api/v1/file/list", {
-    page:1,
+    page:page,
   },{
     headers: {
       "Authorization": localStorage.getItem("token"),
     },
   })
   FindList.value = res.data.list
+  totPage.value = res.data.allpages
+  currentPage.value = res.data.page
 }
 onMounted(async () => {
+  let size = Route.currentRoute.value.query.size
+  let page = Route.currentRoute.value.query.p
+  console.log(page,size)
+  if (page === undefined || page === null || page === '' || page === 0) {
+  }else{
+    currentPage.value = Number(page)
+  }
+  if (pagesize === undefined || pagesize === null || pagesize === '' || pagesize === 0) {
+  }else{
+    pagesize.value = Number(size)
+  }
   auth.value = user.getUserToken
-  GetFileList()
+  await GetFileList(currentPage.value)
 })
 </script>
 
 <template>
-  <div class="container " style="display: flex;width: 100%;" >
+  <div class="container " style="display: flex;width: 100%;margin-top: 15px" >
     <el-backtop :right="50" :bottom="50" style="color:#000000;">
       <el-icon><ArrowUpBold /></el-icon>
     </el-backtop>
@@ -78,10 +100,25 @@ onMounted(async () => {
             <el-button class="single-button"  size="default"   @click="()=>{download(local,user.getUserToken,item.path,item.name)}" style="padding-left: 2px;padding-right: 2px">
               <el-icon size=28 color="#40E0D0"><Download /></el-icon>
             </el-button>
-            <el-button  class="single-button"  size="default"  @click="async ()=>{await deletefile(local,item.id,auth);await GetFileList()}" style="padding-left: 2px;padding-right: 2px" >
+            <el-button  class="single-button"  size="default"  @click="async ()=>{await deletefile(local,item.id,auth);await GetFileList(currentPage.value)}" style="padding-left: 2px;padding-right: 2px" >
               <el-icon size=28 color="#FF0000"><Delete /></el-icon>
             </el-button>
           </div>
+        </div>
+        <div
+          class="container"
+          style="text-align: center;bottom:0"
+        >
+          <el-pagination
+              :current-page="currentPage"
+              :page-size="1"
+              :pager-count="7"
+              layout="prev, pager, next"
+              :total="totPage"
+              @current-change="handleCurrentChange"
+          >
+
+          </el-pagination>
         </div>
       </div>
     </div>
@@ -98,6 +135,7 @@ onMounted(async () => {
 <style scoped lang="less">
 @import "../assets/css/container.less";
 @import "../assets/css/color.less";
+@import "@/assets/css/elOverWrite.less";
 #tags span {
   background: @theme-second-color-light;
   border-radius:5px;
@@ -125,8 +163,14 @@ onMounted(async () => {
 .single-button{
     background-color: transparent;
     border: @border-color;
+    &:hover{
+      background-color: rgba(@font-color,0.2);
+    }
 }
 .fill-height{
   flex:1;
+}
+.el-button{
+
 }
 </style>

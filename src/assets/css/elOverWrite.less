@@ -1,0 +1,89 @@
+@import "color";
+.el-pagination {
+  justify-content: center;
+  color:@font-color;
+  /deep/button{
+    background: transparent !important;
+    &:hover {
+      color:@theme-highlight-color !important;
+      &:enabled{
+        background: rgba(255,255,255,0.1) !important;
+      }
+    }
+    color:@font-color;
+  }
+  /deep/.el-pager {
+    li{
+      margin: 0 4px;
+      color:@font-color;
+      background: transparent ;
+      font-size:16px;
+      font-weight: bold;
+      &:hover,&.is-active{
+        background: rgba(255,255,255,0.1);
+        color:@theme-highlight-color !important;
+      }
+    }
+  }
+  /deep/.btn-prev , /deep/.btn-next{
+    margin: 0 4px;
+  }
+}
+
+.el-dialog{
+    --el-dialog-bg-color: @theme-second-color-light !important;
+
+}
+.el-dialog__title{
+  background: @theme-second-color !important;
+  color: @font-color !important;
+}
+.el-upload-dragger{
+  border: 1px dashed @theme-second-color-light !important;
+  background: @theme-second-color-light !important;
+  color: @font-color !important;
+  .el-upload__text{
+    color: @font-color !important;
+  }
+  .el-upload-dragger{
+    color: @font-color !important;
+  }
+}
+
+/deep/.el-progress-bar__inner--striped.el-progress-bar__inner--striped-flow {
+ animation: striped-flow 3s linear infinite;
+}
+/deep/.el-progress-bar__inner--striped {
+ background-image: linear-gradient(45deg, rgba(@theme-second-color, .1) 25%, transparent 0, transparent 50%, rgba(@theme-second-color, .1) 0, rgba(@theme-second-color, .1) 75%, transparent 0, transparent);
+ background-size: 1.25em 1.25em;
+}
+
+/deep/.el-progress-bar__outer {
+ background-color: @theme-second-color-light ;
+ border-radius: 100px;
+ height: 6px;
+ overflow: hidden;
+ position: relative;
+ vertical-align: middle;
+}
+///deep/.el-progress-bar__inner--striped {
+//  background-image: linear-gradient(45deg, rgba(@theme-highlight-color, 0.1) 25%, transparent 0, transparent 50%, rgba(@theme-highlight-color, 0.1) 0, rgba(@theme-highlight-color, 0.1) 75%, transparent 0, transparent);
+//}
+/deep/.el-progress-bar__inner {
+  background-color: rgba(@theme-highlight-color,.9);
+  border-radius: 100px;
+  height: 100%;
+  left: 0;
+  line-height: 1;
+  position: absolute;
+  text-align: right;
+  top: 0;
+  white-space: nowrap;
+}
+.el-notification{
+    background-color: @theme-second-color-light !important;
+    --el-notification-border-color: @theme-second-color !important;
+    .el-notification__title, .el-notification__content{
+      color:@font-color
+    }
+}

@@ -10,7 +10,6 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      default: true,
       meta: { requiresAuth: true },
       component: HomeView,
     },
@@ -28,6 +27,12 @@ const router = createRouter({
       name: 'user',
       meta: { requiresAuth: true },
       component:UserView,
+    },{
+      path:'/list',
+      name:'list',
+      default: true,
+      meta: { requiresAuth: true },
+      component:HomeView
     }
   ],
 })
