@@ -47,8 +47,8 @@ onBeforeMount(async () => {
         }
       }
     }catch( error){
-      localStorage.removeItem("token")
-      user.$reset()
+      // localStorage.removeItem("token")
+      // user.$reset()
       Router.push("/login")
     }
   }

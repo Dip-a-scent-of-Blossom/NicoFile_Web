@@ -3,6 +3,7 @@ import HomeView from '@/components/HomeView.vue'
 import LoginView from "@/components/LoginView.vue";
 import RegisterView from "@/components/RegisterView.vue";
 import UserView from "@/components/UserView.vue";
+import Article from "@/components/Article.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       default: true,
       meta: { requiresAuth: true },
       component:HomeView
+    },{
+      path:'/article/:id',
+      name:'article',
+      meta: { requiresAuth: false },
+      component:Article
     }
   ],
 })
