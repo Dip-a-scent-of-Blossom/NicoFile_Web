@@ -1,0 +1,44 @@
+/* 修改字体样式 */
+@import "color";
+
+/* 修改代码高亮样式 */
+.vditor-reset {
+  color: @font-color; /* 字体颜色为白色 */
+  padding: 0 15px;
+  &pre{
+      background-color: #2d2d2d; /* 代码块背景为暗色 */
+      color: @font-color; /* 代码块文字颜色 */
+  }
+  &code {
+    background: #2d2d2d; /* 代码背景为暗色 */
+    color: #f8f8f2; /* 代码文字颜色 */
+    }
+  &.hljs {
+    background-color: #2d2d2d; /* 高亮背景为暗色 */
+    color: #f8f8f2; /* 高亮文字颜色 */
+  }
+}
+/deep/ code{
+    &.hljs{
+      color: @font-color;
+      background: @theme-background-color-light;
+    }
+
+  }
+/deep/ span{
+  &.hljs-string{
+    color: #9fea9c;
+  }
+  &.hljs-function{
+
+  }
+  &.hljs-type{
+    color: #ffc848;
+  }
+  &.hljs-comment{
+    color: rgba(#d9d9d9,.75)
+  }
+  &.hljs-title{
+    color:#368CCB;
+  }
+}

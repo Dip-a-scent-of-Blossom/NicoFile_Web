@@ -17,10 +17,9 @@ const handleClose = (done) => {
 const uploadfile = ref(null)
 
 const isActive = ref(false)
-
-onBeforeMount(async () => {
+onMounted(async ()=>{
   let token =  localStorage.getItem("token")
-  console.log(router.meta)
+  console.log(route.value.meta,route.value.name)
   if (token !== null ) {
     try{
       const res =await axios.post(local + "api/v1/user/loadtoken", {
@@ -45,7 +44,7 @@ onBeforeMount(async () => {
           user.$reset()
           Router.push("/login")
         }else{
-          
+
         }
       }
     }catch( error){
@@ -54,6 +53,9 @@ onBeforeMount(async () => {
       Router.push("/login")
     }
   }
+})
+onBeforeMount(async () => {
+
 
 })
 </script>
