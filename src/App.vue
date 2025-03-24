@@ -6,9 +6,10 @@ import {auth, download, local, uploading} from "@/assets/js/file.js";
 import {userStore} from "@/assets/js/store.js";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
-import Router from "@/router/index.js";
+import { useRoute } from 'vue-router';
 import Header from "@/components/side/header.vue";
-
+import router from "./router";
+const route = router.currentRoute
 const user = userStore()
 const handleClose = (done) => {
   done()
@@ -19,7 +20,8 @@ const isActive = ref(false)
 
 onBeforeMount(async () => {
   let token =  localStorage.getItem("token")
-  if (token !== null) {
+  console.log(router.meta)
+  if (token !== null ) {
     try{
       const res =await axios.post(local + "api/v1/user/loadtoken", {
       },{
