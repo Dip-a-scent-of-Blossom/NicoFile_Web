@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/components/HomeView.vue'
+import FileListView from '@/components/FileListView.vue'
 import LoginView from "@/components/LoginView.vue";
 import RegisterView from "@/components/RegisterView.vue";
 import UserView from "@/components/UserView.vue";
 import Article from "@/components/Article.vue";
+import ArticleWrite from "@/components/ArticleWrite.vue";
+import ArticleList from "@/components/ArticleList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,8 +13,9 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      default: true,
       meta: { requiresAuth: true },
-      component: HomeView,
+      component: FileListView,
     },
     {
       path: '/login',
@@ -31,14 +34,23 @@ const router = createRouter({
     },{
       path:'/list',
       name:'list',
-      default: true,
       meta: { requiresAuth: true },
-      component:HomeView
+      component:FileListView
     },{
       path:'/article/:id',
       name:'article',
       meta: { requiresAuth: false },
       component:Article
+    },{
+      path:'/article',
+      name:'articleWrite',
+      meta: { requiresAuth: true },
+      component:ArticleWrite
+    },{
+      path:'/articles',
+      name:'articleList',
+      meta: { requiresAuth: false  },
+      component:ArticleList,
     }
   ],
 })

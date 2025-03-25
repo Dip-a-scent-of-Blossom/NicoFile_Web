@@ -186,29 +186,5 @@ const DeleteUserHandle =async () => {
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
 @import "@/assets/css/elOverWrite.less";
-:deep .el-tabs__item.is-active, .el-tabs__item:hover {
-  color: @theme-highlight-color;
-}
-
-:deep .el-input-group__append{
-  background-color: #48a548;
-  color:#000000;
-}
-:deep .el-tabs__active-bar {
-  background-color: @theme-highlight-color;
-}
-
-.table-container {
-  -webkit-overflow-scrolling: touch;
-  overflow: auto;
-  overflow-y: hidden;
-  max-width: 100%;
-}
-.el-input{
-  --el-input-bg-color: @theme-background-color-light;
-  --el-input-text-color: @font-color;
-  --el-input-border-color: @border-color  ;
-  --el-input-focus-border-color: @theme-highlight-color;
-}
 
 </style>

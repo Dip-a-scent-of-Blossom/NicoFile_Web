@@ -1,6 +1,16 @@
 /* 修改字体样式 */
 @import "color";
-
+.vditor{
+  --toolbar-background-color:rgba(@font-color,.7);
+  --panel-background-color: rgba(@theme-second-color,1);
+  --textarea-background-color: rgba(@theme-second-color,1);
+  /deep/&pre{
+    background-color: rgba(@font-color,.2);
+    /deep/.vditor-reset:focus{
+        background-color: rgba(@font-color,0);
+    }
+  }
+}
 /* 修改代码高亮样式 */
 .vditor-reset {
   color: @font-color; /* 字体颜色为白色 */

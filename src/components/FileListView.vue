@@ -21,8 +21,6 @@ const pagesize = ref(10)
 async function handleCurrentChange(val) {
   // await Router.push("/?p=" + val)
   await Route.push({path:'/list',query: {p:val}})
-
-  // await GetFileList(val)
 }
 async function GetFileList(page) {
   const res = await axios.post(local + "api/v1/file/list", {

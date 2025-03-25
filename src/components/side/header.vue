@@ -5,7 +5,7 @@ import Router from "@/router/index.js";
 import {ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import UploadFile from "@/components/UploadFile.vue";
-import {ArrowDown} from "@element-plus/icons-vue";
+import {ArrowDown, Edit, Upload} from "@element-plus/icons-vue";
 const dialogVisible = ref(false)
 
 const user = userStore()
@@ -72,12 +72,15 @@ const drawer = ref(false)
           <router-link to="/" class="navbar-item is-size-6">首页</router-link>
           <el-divider style="margin:auto"></el-divider>
           <router-link to="/" class="navbar-item is-size-6">文件</router-link>
-          <a v-if="user.logined && user.userToken!==''"  @click="dialogVisible = true" style="cursor: pointer"  class="navbar-item ">
+          <router-link to="/articles" class="navbar-item is-size-6">博客</router-link>
+          <router-link to="/article" class="navbar-item is-size-6"><el-icon><Edit /></el-icon>写文章</router-link>
+          <a v-if="user.logined && user.userToken!==''"  @click="dialogVisible = true" style="cursor: pointer;display: flex"  class="navbar-item is-size-6" >
             <el-badge :value="uploading"
                       :show-zero="false"  >
-            <span style="display: block" class="is-size-6" >
-              上传
-            </span>
+
+<!--            <span style="display: flex" class="is-size-6"  >-->
+              <el-icon><Upload /></el-icon>上传
+<!--            </span>-->
             </el-badge>
           </a>
 
@@ -112,17 +115,19 @@ const drawer = ref(false)
     <div id="mainNavbar" class="navbar-menu" >
       <div class="navbar-start">
         <router-link to="/" class="navbar-item is-size-6">首页</router-link>
+        <router-link to="/articles" class="navbar-item is-size-6">博客</router-link>
+        <router-link to="/list" class="navbar-item is-size-6">文件</router-link>
       </div>
       <div class="navbar-end" style="background-color: transparent">
+        <router-link to="/article" class="navbar-item is-size-6"><el-icon><Edit /></el-icon>写文章</router-link>
         <div class="navbar-item" style="">
           <el-badge :value="uploading"
                     :show-zero="false">
-            <a  class="navbar-link is-size-6"  @click="dialogVisible = true" style="cursor: pointer;display: block;padding:0 0 " >
-<!--                <span style="" class=""  >-->
-                  上传
-<!--                </span>-->
+            <a  class="navbar-link is-size-6"  @click="dialogVisible = true" style="cursor: pointer;display: flex;padding:0 0 " >
+              <el-icon><Upload /></el-icon>上传
             </a>
           </el-badge>
+
         </div>
 
 
