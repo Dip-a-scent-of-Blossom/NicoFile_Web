@@ -18,38 +18,7 @@ const uploadfile = ref(null)
 
 const isActive = ref(false)
 onMounted(async ()=>{
-  let token =  localStorage.getItem("token")
-  if (token !== null ) {
-    try{
-      const res =await axios.post(local + "api/v1/user/loadtoken", {
-      },{
-        headers: {
-          "Authorization": token,
-        }
-      })
-      console.log(token)
-      let jwtDecodeVal = jwtDecode(token);
-      if (res.status === 200) {
-        if (res.data.error===false){
-          user.setNew(token,res.data.username,'',jwtDecodeVal.id)
-        }else{
-          localStorage.removeItem("token")
-          user.$reset()
-          router.push("/login")
-        }
-      }else{
-        if (res.status === 401){
-          localStorage.removeItem("token")
-          user.$reset()
-          router.push("/login")
-        }else{
 
-        }
-      }
-    }catch( error){
-      router.push("/login")
-    }
-  }
 })
 onBeforeMount(async () => {
 
@@ -78,10 +47,10 @@ onBeforeMount(async () => {
   <footer class="footer" style="background-color: rgba( 33,35,42,0.5)">
     <div class="content has-text-centered">
       <span>
-         <a  style="color:#368CCB;"  href="https://github.com/ManInM00N/NicoFile">Nico File v0.1.1</a> 由 <a style="color:#368CCB;" href="https://github.com/ManInM00N">ManInM00N</a> 构建
+         <a  style="color:#368CCB;"  href="https://github.com/ManInM00N/NicoFile">Nico File v0.1.2</a> 由 <a style="color:#368CCB;" href="https://github.com/ManInM00N">ManInM00N</a> 构建
       </span>
       <br/>
-      <span >
+      <span class="colorfulword">
         Copyright © 2024 by ManInM00N , All rights reserved.
       </span>
     </div>

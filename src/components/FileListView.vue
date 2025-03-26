@@ -37,7 +37,7 @@ async function GetFileList(page) {
 onMounted(async () => {
   let size = Route.currentRoute.value.query.size
   let page = Route.currentRoute.value.query.p
-  console.log(page,size)
+  // console.log(page,size)
   if (page === undefined || page === null || page === '' || page === 0) {
   }else{
     currentPage.value = Number(page)

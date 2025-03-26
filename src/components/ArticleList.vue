@@ -1,12 +1,14 @@
 <script setup>
 
 import {calc, deletefile, download, fmtDownloadTimes, local} from "@/assets/js/file.js";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import Route from "@/router/index.js";
 import axios from "axios";
 import router from "@/router/index.js";
 import {userStore} from "@/assets/js/store.js";
 import {ElNotification} from "element-plus";
+import RecommendArtcle from "@/components/side/recommendArtcle.vue";
+import {Star, View} from "@element-plus/icons-vue";
 
 const FindList = ref([])
 FindList.value = [
@@ -14,17 +16,19 @@ FindList.value = [
     "id":1,
     "title":"文章标题t1",
     "content":"文章内容c1",
-    "author":"作者a1",
+    "authorname":"作者a1",
     "authorid":"1",
     "view":24,
+      "like":0,
     },
     {
     "id":2,
     "title":"文章标题t2",
     "content":"文章内容c2",
-    "author":"作者a1",
+    "authorname":"作者a1",
     "authorid":"1",
-    "view":22,  
+    "view":22,
+      "like":0,
     }
 ]
 const auth = ref('')
@@ -36,7 +40,7 @@ async function handleCurrentChange(val) {
   // await Router.push("/?p=" + val)
   await Route.push({path:'/list',query: {p:val}})
 }
-async function GetFileList(page) {
+async function GetArticleList(page) {
   let res = null
   try {
     res = await axios.post(local + "api/v1/article/list", {
@@ -56,6 +60,7 @@ async function GetFileList(page) {
     return
   }else if (res.status === 200) {
     FindList.value = res.data.list
+    console.log(res)
   }else{
     ElNotification(
         {
@@ -71,7 +76,21 @@ async function GetFileList(page) {
   totPage.value = res.data.allpages
   currentPage.value = res.data.page
 }
-
+onMounted(async ()=>{
+  let size = Route.currentRoute.value.query.size
+  let page = Route.currentRoute.value.query.p
+  // console.log(page,size)
+  if (page === undefined || page === null || page === '' || page === 0) {
+  }else{
+    currentPage.value = Number(page)
+  }
+  if (pagesize === undefined || pagesize === null || pagesize === '' || pagesize === 0) {
+  }else{
+    pagesize.value = Number(size)
+  }
+  auth.value = localStorage.getItem("token")
+  await GetArticleList(currentPage.value)
+})
 
 </script>
 
@@ -91,19 +110,26 @@ async function GetFileList(page) {
         <div v-for="(item,index) in FindList" :key="item.id" class="articlePreview" >
             <div slot="header"  style="margin-bottom: 8px">
                 <router-link :to="'/article/'+item.id" class="titleLink is-size-6">{{ item.title }}</router-link>
-                
             </div>
             <div >
-                <span>
-                    <el-text  truncated>
+                <span class="two-line-ellipsis">
+<!--                    <el-text  truncated>-->
                         {{ item.content }}
-                    </el-text>
+<!--                    </el-text>-->
                 </span>
             </div>
-            <div>
-                <span> {{ item.author }}</span>
+            <div class="info">
+                <span> {{ item.authorname }}</span>
                 <span> {{ item.createdat }}</span>
-                <span> {{ item.view }}</span>
+                <span>
+                <el-icon ><View /></el-icon>
+                  {{ item.view }}
+                </span>
+                <span>
+                <el-icon><Star /></el-icon>
+                  {{ item.like }}
+                </span>
+
             </div>
         </div>
         <div
@@ -148,15 +174,23 @@ async function GetFileList(page) {
         color:#ff6600
     }
 }
-
+.two-line-ellipsis {
+  margin: 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 限制显示的行数 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .articlePreview{
     background-color: @theme-background-color-light;
     padding-top: 12px;
     margin-top: 16px;
 }
-.colorfulword {
-    -webkit-text-fill-color: transparent;
-    background: -webkit-linear-gradient(135deg, rgb(14, 175, 109), rgb(255, 106, 198) 25%, rgb(20, 123, 150) 50%, rgb(230, 210, 5) 55%, rgb(44, 196, 224) 60%, rgb(139, 44, 224) 80%, rgb(255, 99, 132) 95%, rgb(8, 223, 180)) 0% 0% / 200% 200% text;
-    animation: 20s linear 0s infinite normal none running flowCss;
+.info{
+  span{
+    margin-right: 8px;
+  }
 }
+
 </style>

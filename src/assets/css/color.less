@@ -10,3 +10,22 @@
 span,a{
   color: @font-color
 }
+
+.colorfulword {
+  -webkit-text-fill-color: transparent;
+  background: -webkit-linear-gradient(135deg, rgb(14, 175, 109), rgb(255, 106, 198) 25%, rgb(20, 123, 150) 50%, rgb(230, 210, 5) 55%, rgb(44, 196, 224) 60%, rgb(139, 44, 224) 80%, rgb(255, 99, 132) 95%, rgb(8, 223, 180)) 0% 0% / 200% 200% text;
+  animation: 16s linear 0s infinite normal none running flowCss;
+}
+flowCss animation {
+  background-position-x: -281.973%;
+  background-position-y: 0px;
+}
+@keyframes flowCss {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: -400% 0px;
+  }
+  
+}

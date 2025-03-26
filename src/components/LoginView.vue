@@ -62,10 +62,36 @@ const errorMessage = (text) => {
   }, 3000)
 }
 
-onMounted(() => {
-  console.log(user.logined)
-  if (user.logined) {
-    Router.push("/")
+onMounted(async () => {
+  let token =  localStorage.getItem("token")
+  if (token !== null ) {
+    try{
+      const res =await axios.post(local + "api/v1/user/loadtoken", {
+      },{
+        headers: {
+          "Authorization": token,
+        }
+      })
+      console.log(token)
+      let jwtDecodeVal = jwtDecode(token);
+      if (res.status === 200) {
+        if (res.data.error===false){
+          user.setNew(token,res.data.username,'',jwtDecodeVal.id)
+          Router.push("/")
+        }else{
+          localStorage.removeItem("token")
+          user.$reset()
+        }
+      }else{
+        if (res.status === 401){
+          localStorage.removeItem("token")
+          user.$reset()
+        }else{
+
+        }
+      }
+    }catch( error){
+    }
   }
   validateInput()
 })

@@ -6,6 +6,9 @@ import UserView from "@/components/UserView.vue";
 import Article from "@/components/Article.vue";
 import ArticleWrite from "@/components/ArticleWrite.vue";
 import ArticleList from "@/components/ArticleList.vue";
+import axios from "axios";
+import {local} from "@/assets/js/file.js";
+import {jwtDecode} from "jwt-decode";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,16 +57,48 @@ const router = createRouter({
     }
   ],
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token');
-  if ( (to.name === 'login' || to.name==='register') && token!==null) {
-    next('/'); // 如果已经登录
+  // if ( (to.name === 'login' || to.name==='register') && token!==null) {
+  //   next('/'); // 如果已经登录
+  // }
+  // else
+  if (to.meta.requiresAuth ===true) {
+    if (token !== null ) {
+      try{
+        const res =await axios.post(local + "api/v1/user/loadtoken", {
+        },{
+          headers: {
+            "Authorization": token,
+          }
+        })
+        let jwtDecodeVal = jwtDecode(token);
+        if (res.status === 200) {
+          if (res.data.error===false){
+
+            // user.setNew(token,res.data.username,'',jwtDecodeVal.id)
+          }else{
+            localStorage.removeItem("token")
+            next('/login');
+            // router.push("/login")
+          }
+        }else{
+          if (res.status === 401){
+            localStorage.removeItem("token")
+            next('/login');
+          }else{
+
+          }
+        }
+      }catch( error){
+        // router.push("/login")
+      }
+    }else{
+      next('/login'); // 如果需要登录且没有 token，跳转到登录页面
+    }
+
   }
-  else if (to.meta.requiresAuth && !token) {
-    next('/login'); // 如果需要登录且没有 token，跳转到登录页面
-  } else {
-    next(); // 否则继续导航
-  }
+  next(); // 否则继续导航
 });
 
 export default router
