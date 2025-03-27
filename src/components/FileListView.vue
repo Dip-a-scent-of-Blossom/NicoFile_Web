@@ -155,7 +155,7 @@ onMounted(async () => {
 }
 .normal-container{
   min-width:min(100%, 900px);
-  margin: auto;
+  margin:20px  auto;
   padding: 0;
 }
 .single-button{

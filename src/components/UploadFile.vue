@@ -17,7 +17,7 @@ const maxSize  = ref(5 * 1024 * 1024 * 1024) // 上传最大文件限制  最小
 const chunkSize = 1024 * 1024 * 5 // 每块文件大小   100mb
 const fileList = ref([])
 const oncalcing = ref(false)
-
+const desc = ref('')
 
 
 async function RemoveFile(file, filelist) {
@@ -56,7 +56,7 @@ async function CalcFile(file, filelist) {
 }
 
 const merge = async ()=>{
-  const res = await mergeFiles(local,fileMd5.value,chunktotals.value, filename.value,Ext.value,size.value)
+  const res = await mergeFiles(local,fileMd5.value,chunktotals.value, filename.value,Ext.value,size.value,desc.value)
   return res
 }
 const submit = async () => {
@@ -178,9 +178,16 @@ defineExpose({
       <div class="el-upload__text">拖拽文件到这里，或 <em>点击上传</em></div>
     </template>
 
-  </el-upload
+  </el-upload>
+  <div>
+    <el-input
+        v-model="desc"
+        placeholder="文件描述"
+    >
 
-  >
+    </el-input>
+
+  </div>
   <div v-if="oncalcing">
     <span>
       计算文件md5值......(文件越大用时越久，可能会出现卡顿)

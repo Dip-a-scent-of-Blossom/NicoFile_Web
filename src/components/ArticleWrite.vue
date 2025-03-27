@@ -5,11 +5,20 @@ import Vditor from "vditor";
 import axios from "axios";
 import router from "@/router/index.js";
 import {ElMessage, ElNotification} from "element-plus";
+import {Plus, UploadFilled} from "@element-plus/icons-vue";
+import {local} from "@/assets/js/file.js";
 const editor = ref()
 const title = ref('')
+const display = ref(true)
+const fileList = ref([])
+function DisplayFile(file, filelist) {
+  fileList.value = filelist
+  display.value = fileList.value.length <= 0;
+}
 onMounted(async () => {
   const articleContainer = document.getElementById('article-container')
   editor.value = new Vditor("article", {
+    cdn: '/vditor',
     toolbarConfig: {
       pin: true,
     },
@@ -24,8 +33,16 @@ onMounted(async () => {
 const submitArticle = async ()=> {
   console.log(editor.value.getValue())
   let res = null
+  let form = new FormData();
+  form.append("pic", fileList.value[0].raw);
   try {
-    res =await  axios.post('http://127.0.0.1:8888/api/v1/article', {
+
+    res = await axios.post(local+"api/v1/img/upload",form, {
+      headers: {
+        "Authorization": localStorage.getItem("token"),
+      }
+    })
+    res =await  axios.post(local+'api/v1/article', {
       content: editor.value.getValue(),
       title: title.value,
     }, {
@@ -64,9 +81,45 @@ onBeforeUnmount(()=>{
 
 
         </div>
-        <div class="vditor-reset" style="padding:15px 15px 0px 15px">
-          <el-button style="float:right" type="primary" @click="submitArticle" >提交</el-button>
+        <div style="line-height: 61px;">
+          <span style="padding-left: 12px;font-size: 20px;font-weight: 500;">发布设置</span>
         </div>
+        <div style="display: flex;padding-bottom: 16px;min-width: 100%">
+          <div>
+            <span style="padding-left: 24px">
+              封面设置
+            </span>
+          </div>
+          <div style="padding-left: 16px"
+               class="freePic"
+          >
+            <el-upload
+                ref = "upload"
+                drag
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+                :file-list="fileList"
+                :limit="1"
+                :on-change="DisplayFile"
+                :class="{ 'has-file': !display }"
+                :on-remove="DisplayFile"
+            >
+              <template #trigger >
+                <div class="el-upload__text" style="color: black">
+                  <el-icon color="#000"><Plus /></el-icon>
+                  <span style="color:#000;">
+                    添加文章封面
+                  </span>
+                </div>
+              </template>
+            </el-upload>
+          </div>
+          <div  style="padding:15px 15px 0px 15px;margin-left: auto">
+            <el-button style="top:70%;position: relative" type="primary" @click="submitArticle" >提交</el-button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -84,6 +137,21 @@ onBeforeUnmount(()=>{
   border-radius: 10px;
 }
 
-
-
+:deep .el-upload-dragger{
+  height: 100%;
+  width: 100%;
+  padding: 60px 10px;
+  background: transparent !important;
+  border:   none !important;
+}
+//:deep .el-upload--picture-card{
+//  display: none !important;
+//}
+/* 默认显示上传按钮 */
+:deep(.el-upload--picture-card) {
+  display: inline-flex;
+}
+.freePic ::v-deep .has-file .el-upload--picture-card {
+  display: none;
+}
 </style>

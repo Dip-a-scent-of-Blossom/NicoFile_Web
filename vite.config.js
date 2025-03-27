@@ -26,6 +26,11 @@ export default defineConfig({
         pathRewrite: {
           '^/apis': ''
         }
+      },
+      '/vditor': {
+        target: 'https://unpkg.com/vditor@3.10.9', // 或 Vditor 使用的 CDN 地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/vditor/, '')
       }
     }
   }

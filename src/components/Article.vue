@@ -99,6 +99,7 @@ onMounted(async ()=>{
 </script>
 
 <template>
+
   <div class="container">
       <div class="normal-container" >
         <div class="container" id ="article-container" style="padding:16px 24px;border-radius: 10px">

@@ -1,6 +1,6 @@
 {
   "name": "nicofile_gui",
-  "version": "0.0.0",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -28,6 +28,9 @@
     "axios": "^1.7.9",
     "jwt-decode": "^4.0.0",
     "less": "^4.1.1",
-    "vditor": "v3.10.9"
+    "vditor": "v3.10.9",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons" :"^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8"
   }
 }

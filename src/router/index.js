@@ -17,8 +17,8 @@ const router = createRouter({
       path: '/',
       name: 'home',
       default: true,
-      meta: { requiresAuth: true },
-      component: FileListView,
+      meta: { requiresAuth: false },
+      component: ArticleList,
     },
     {
       path: '/login',
@@ -75,7 +75,7 @@ router.beforeEach(async (to, from, next) => {
         let jwtDecodeVal = jwtDecode(token);
         if (res.status === 200) {
           if (res.data.error===false){
-
+            localStorage.setItem("username",res.data.username)
             // user.setNew(token,res.data.username,'',jwtDecodeVal.id)
           }else{
             localStorage.removeItem("token")

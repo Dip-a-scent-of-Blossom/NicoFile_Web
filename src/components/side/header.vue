@@ -1,8 +1,8 @@
 <script setup>
 
-import {uploading} from "@/assets/js/file.js";
+import {local, uploading} from "@/assets/js/file.js";
 import Router from "@/router/index.js";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import UploadFile from "@/components/UploadFile.vue";
 import {ArrowDown, Edit, Upload} from "@element-plus/icons-vue";
@@ -28,6 +28,10 @@ const clear=()=>{
 }
 
 const drawer = ref(false)
+onMounted(()=>{
+  user.username = localStorage.getItem("username")
+  user.userToken = localStorage.getItem("token")
+})
 </script>
 
 <template>
@@ -84,9 +88,9 @@ const drawer = ref(false)
             </el-badge>
           </a>
 
-          <div class="navbar-item has-dropdown is-hoverable" v-if="user.logined && user.userToken!==''">
+          <div class="navbar-item has-dropdown is-hoverable" v-if=" user.userToken!==''">
             <a style="" class="is-size-6 navbar-item">
-              {{ cutName(user.username)}}
+              {{cutName(user.username)}}
             </a>
             <router-link to='/user' class="navbar-item is-size-6">
               系统管理
@@ -131,7 +135,7 @@ const drawer = ref(false)
         </div>
 
 
-        <div class="navbar-item has-dropdown is-hoverable" v-if="user.logined && user.userToken!==''">
+        <div class="navbar-item has-dropdown is-hoverable" v-if="user.userToken!==''">
 
           <el-dropdown class="" :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">
             <a style="padding: 3px 6px; outline: none !important;display: flex;align-items: center;" class="is-size-6 navbar-link">

@@ -4,7 +4,6 @@ import {ElNotification} from "element-plus";
 export const uploading = ref(0)
 export const auth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsImV4cCI6MTczODc1MDkyOSwiaWF0IjoxNzM4MTQ3MzI5fQ.nPhzH5kNBMaEAelUf9kDa_kftdHJ2ZA1r4uDRa-ZLag"
 export const useable = ref(false)
-const server = "http://152.32.133.174:7235/"
 const local1 = "http://127.0.0.1:8888/"
 export const local = local1
 export async function download(prefix,auth,path,fileName){
@@ -130,7 +129,7 @@ export const uploadFileToServer = async (prefix,file, chunkNumber, fileName,_md5
     return result
 }
 
-export const mergeFiles = async (prefix,fileMd5,chunkTotal, fileName,ext,size) => {
+export const mergeFiles = async (prefix,fileMd5,chunkTotal, fileName,ext,size,desc) => {
     console.log("merge chunks: ",chunkTotal)
     const result =await axios.post(prefix+"api/v1/file/mergechunk", {
         chunkNum: chunkTotal,
@@ -138,7 +137,7 @@ export const mergeFiles = async (prefix,fileMd5,chunkTotal, fileName,ext,size) =
         md5 :fileMd5,
         ext: ext,
         size: size,
-        description :''
+        description :desc
     },{
         headers: {
             "Authorization":  localStorage.getItem("token"),

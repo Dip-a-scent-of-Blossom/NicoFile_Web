@@ -19,7 +19,7 @@ FindList.value = [
     "authorname":"作者a1",
     "authorid":"1",
     "view":24,
-      "like":0,
+    "like":0,
     },
     {
     "id":2,
@@ -28,7 +28,7 @@ FindList.value = [
     "authorname":"作者a1",
     "authorid":"1",
     "view":22,
-      "like":0,
+    "like":0,
     }
 ]
 const auth = ref('')
@@ -60,7 +60,6 @@ async function GetArticleList(page) {
     return
   }else if (res.status === 200) {
     FindList.value = res.data.list
-    console.log(res)
   }else{
     ElNotification(
         {
@@ -95,11 +94,11 @@ onMounted(async ()=>{
 </script>
 
 <template>
-  <div class="container " style="display: flex;width: 100%;margin-top: 15px" >
+  <div class="container" style="display: flex;width: 100%;margin-top: 15px" >
     <el-backtop :right="50" :bottom="50" style="color:#000000;">
       <el-icon><ArrowUpBold /></el-icon>
     </el-backtop>
-    <div class="normal-container"   >
+    <div class="normal-container">
       <div v-if="FindList.length ===0" >
         <article>
           <h1>文章列表</h1>
@@ -109,16 +108,15 @@ onMounted(async ()=>{
       <div v-else style="width: auto" >
         <div v-for="(item,index) in FindList" :key="item.id" class="articlePreview" >
             <div slot="header"  style="margin-bottom: 8px">
-                <router-link :to="'/article/'+item.id" class="titleLink is-size-6">{{ item.title }}</router-link>
+                <router-link :to="'/article/'+item.id" class="titleLink is-size-4" style="color:#368CCB">{{ item.title }}</router-link>
             </div>
-            <div >
+            <div style="display: flex">
+              <el-image style="width: 100px; height: 100px" :src='local+"api/v1/img/download/"+item.cover' fit="cover" />
                 <span class="two-line-ellipsis">
-<!--                    <el-text  truncated>-->
                         {{ item.content }}
-<!--                    </el-text>-->
                 </span>
             </div>
-            <div class="info">
+            <div class="info is-size-5">
                 <span> {{ item.authorname }}</span>
                 <span> {{ item.createdat }}</span>
                 <span>
@@ -164,33 +162,42 @@ onMounted(async ()=>{
 @import "../assets/css/color.less";
 @import "@/assets/css/elOverWrite.less";
 
+.articlePreview{
+  background-color: rgba(@theme-background-color,0.85);
+  padding:12px 12px 12px 12px;
+  margin-top: 16px;
+  border-radius: 16px;
+  width: auto;
+}
+
 .normal-container{
   min-width:min(100%, 900px);
-  margin: auto;
+  max-width: min(100%, 900px);
+  margin:20px  auto;
+
   padding: 0;
 }
 .titleLink{
     &:hover{
-        color:#ff6600
+        color:#ff6600 !important;
     }
 }
 .two-line-ellipsis {
-  margin: 8px 0;
+  margin: 16px 0 16px 8px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 限制显示的行数 */
+  -webkit-line-clamp: 3; /* 限制显示的行数 */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: calc(100% - 100px);
+
 }
-.articlePreview{
-    background-color: @theme-background-color-light;
-    padding-top: 12px;
-    margin-top: 16px;
-}
+
 .info{
   span{
     margin-right: 8px;
   }
+  margin-top: 24px;
 }
 
 </style>
