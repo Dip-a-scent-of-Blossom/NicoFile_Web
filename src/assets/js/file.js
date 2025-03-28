@@ -4,14 +4,14 @@ import {ElNotification} from "element-plus";
 export const uploading = ref(0)
 export const auth = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsImV4cCI6MTczODc1MDkyOSwiaWF0IjoxNzM4MTQ3MzI5fQ.nPhzH5kNBMaEAelUf9kDa_kftdHJ2ZA1r4uDRa-ZLag"
 export const useable = ref(false)
-const local1 = "http://127.0.0.1:8888/"
+const local1 = "/apis"
 export const local = local1
 export async function download(prefix,auth,path,fileName){
     // const pathParts = path.split('/');
     // const filteredParts = pathParts.filter(part => part !== '');
     // console.log("filteredParts",filteredParts[0])
     // const url = local+"api/v1/file/download?url="+filteredParts[0]
-    const url = local+"api/v1/file/download?url="+path
+    const url = local+"/api/v1/file/download?url="+path
     await axios.get(url, {
         headers: {
             'Authorization':  localStorage.getItem("token"),
@@ -39,7 +39,7 @@ export async function download(prefix,auth,path,fileName){
 export const deletefile = async (prefix,fileid) => {
     let res = null
     try {
-        res = await axios.delete(prefix + "api/v1/file/delete?fileid="+fileid,{
+        res = await axios.delete(prefix + "/api/v1/file/delete?fileid="+fileid,{
                 headers: {
                     "Authorization":  localStorage.getItem("token"),
                 }
@@ -91,7 +91,7 @@ export const deletefile = async (prefix,fileid) => {
 }
 
 export async function checkchunk(prefix,chunkTotal, fileName,md5arr,fileMd5,Ext) {
-    const resp = await axios.post(prefix+"api/v1/file/checkchunk", {
+    const resp = await axios.post(prefix+"/api/v1/file/checkchunk", {
         chunkNum: chunkTotal,
         filename: fileName,
         md5 : md5arr,
@@ -114,7 +114,7 @@ export const uploadFileToServer = async (prefix,file, chunkNumber, fileName,_md5
     form.append("ext", ext);
     console.log(_md5,"chunkNumber: ",chunkNumber)
     var result
-    await axios.post(prefix+"api/v1/file/uploadchunk", form,{
+    await axios.post(prefix+"/api/v1/file/uploadchunk", form,{
         headers: {
             "Authorization":  localStorage.getItem("token"),
         },
@@ -131,7 +131,7 @@ export const uploadFileToServer = async (prefix,file, chunkNumber, fileName,_md5
 
 export const mergeFiles = async (prefix,fileMd5,chunkTotal, fileName,ext,size,desc) => {
     console.log("merge chunks: ",chunkTotal)
-    const result =await axios.post(prefix+"api/v1/file/mergechunk", {
+    const result =await axios.post(prefix+"/api/v1/file/mergechunk", {
         chunkNum: chunkTotal,
         filename: fileName,
         md5 :fileMd5,

@@ -3,6 +3,7 @@ import {onMounted, ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import {FetchArticle} from "@/assets/js/article.js";
 import axios from "axios";
+import {local} from "@/assets/js/file.js";
 const user = userStore()
 const showpic = ref(false)
 const article = ref([
@@ -28,7 +29,7 @@ const board = ref([
 onMounted(async () => {
   let res = null
   try {
-    res = await axios.get(local+"api/v1/article/rank", {
+    res = await axios.get(local+"/api/v1/article/rank", {
       headers: {
         "Authorization": localStorage.getItem("token"),
       }
@@ -69,7 +70,7 @@ onMounted(async () => {
   </div>
   <div class="recommendBar" style="padding-left: 0">
       <div style="padding-top: 8px;display: flex;align-items: center;flex-direction: column" >
-        <el-avatar style="margin: auto;justify-items: center" :size="90" src="./src/assets/avatar.jpg" />
+        <el-avatar style="margin: auto;justify-items: center" :size="90" src="avatar.jpg" />
         <span class="is-size-5 bold">ManInM00N</span>
       </div>
       <div style="justify-content: space-around;display: flex;padding: 0 60px">
@@ -96,7 +97,7 @@ onMounted(async () => {
       </div>
       <img
           v-show="showpic"
-          src="../../assets/wechat.jpg"
+          src="/wechat.jpg"
           alt="悬浮图片"
           class="hover-image"
       >

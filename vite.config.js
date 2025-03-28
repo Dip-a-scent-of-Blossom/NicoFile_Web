@@ -23,15 +23,13 @@ export default defineConfig({
       '/apis': {
         target: 'http://127.0.0.1:8888',
         changeOrigin: true,
-        pathRewrite: {
-          '^/apis': ''
-        }
+        rewrite: (path) => path.replace(/^\/apis/, '') // 统一使用rewrite
       },
       '/vditor': {
-        target: 'https://unpkg.com/vditor@3.10.9', // 或 Vditor 使用的 CDN 地址
+        target: 'http://unpkg.com/vditor@3.10.9', // 或 Vditor 使用的 CDN 地址
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/vditor/, '')
-      }
+      },
     }
   }
 })

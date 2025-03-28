@@ -23,7 +23,7 @@ async function handleCurrentChange(val) {
   await Route.push({path:'/list',query: {p:val}})
 }
 async function GetFileList(page) {
-  const res = await axios.post(local + "api/v1/file/list", {
+  const res = await axios.post(local + "/api/v1/file/list", {
     page:page,
   },{
     headers: {

@@ -66,7 +66,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth ===true) {
     if (token !== null ) {
       try{
-        const res =await axios.post(local + "api/v1/user/loadtoken", {
+        const res =await axios.post(local + "/api/v1/user/loadtoken", {
         },{
           headers: {
             "Authorization": token,

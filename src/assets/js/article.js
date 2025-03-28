@@ -8,7 +8,7 @@ export const FetchArticle = async (id) => {
         article: {},
     }
     try{
-        const res = await axios.get(local+"api/v1/article/"+id)
+        const res = await axios.get(local+"/api/v1/article/"+id)
         if (res.status === 200){
             if (res.data.error === false){
                 result.article = res.data.article

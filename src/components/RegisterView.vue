@@ -5,6 +5,7 @@ import {local} from "@/assets/js/file.js";
 import Router from "@/router/index.js";
 import {jwtDecode} from "jwt-decode";
 import {userStore} from "@/assets/js/store.js";
+import {ElNotification} from "element-plus";
 const username = ref('')
 const email = ref('')
 const verificationCode = ref('')
@@ -13,18 +14,25 @@ const confirmPassword = ref('')
 const user = userStore()
 const handleRegister =async () => {
   try{
-    const res = await axios.post(local + 'api/v1/user/register', {
+    const res = await axios.post(local + '/api/v1/user/register', {
       username: username.value,
       password: password.value,
     })
     if (res.status === 200) {
+      if (res.data.error=== true){
+          ElNotification({
+            title: 'Error',
+            message: res.data.message,
+            type: 'error',
+            position: 'bottom-right'
+          })
+        return
+      }
       alert('注册成功')
       var jwtDecodeVal = jwtDecode(res.data.token);
       localStorage.setItem("token",res.data.token);
-      console.log(jwtDecodeVal)
       Router.push("/")
     } else {
-      console.log(res)
       alert('注册失败')
     }
   }catch(error){

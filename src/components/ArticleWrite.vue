@@ -18,7 +18,7 @@ function DisplayFile(file, filelist) {
 onMounted(async () => {
   const articleContainer = document.getElementById('article-container')
   editor.value = new Vditor("article", {
-    cdn: '/vditor',
+    // cdn: '/vditor-assets',
     toolbarConfig: {
       pin: true,
     },
@@ -37,12 +37,13 @@ const submitArticle = async ()=> {
   form.append("pic", fileList.value[0].raw);
   try {
 
-    res = await axios.post(local+"api/v1/img/upload",form, {
+    res = await axios.post(local+"/api/v1/img/upload",form, {
       headers: {
         "Authorization": localStorage.getItem("token"),
       }
     })
-    res =await  axios.post(local+'api/v1/article', {
+    let picurl = res.data.url
+    res =await  axios.post(local+'/api/v1/article', {
       content: editor.value.getValue(),
       title: title.value,
     }, {

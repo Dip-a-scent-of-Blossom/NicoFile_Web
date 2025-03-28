@@ -9,7 +9,7 @@ export const ChangeUserName = async (name) => {
         message: '',
     }
     try{
-        const res = await axios.post(local+"api/v1/user/newname", {
+        const res = await axios.post(local+"/api/v1/user/newname", {
             newName:name
         },{
             headers:{
@@ -38,7 +38,7 @@ export const ChangeUserPassword = async (password) => {
         message: '',
     }
     try{
-        const res = await axios.post(local+"api/v1/user/newpassword", {
+        const res = await axios.post(local+"/api/v1/user/newpassword", {
             newPassword:password
         },{
             headers:{
@@ -69,7 +69,7 @@ export const DeleteUser = async () => {
     }
     let jwtvalue = jwtDecode(localStorage.getItem('token'))
     try{
-        const res = await axios.delete(local+"api/v1/user/delete?userid="+jwtvalue.id,{
+        const res = await axios.delete(local+"/api/v1/user/delete?userid="+jwtvalue.id,{
             headers:{
                 'Authorization': localStorage.getItem('token')
             }

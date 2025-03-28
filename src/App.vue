@@ -82,7 +82,7 @@ nav {
 
 #content:before{
   background-size: cover;
-  background: url("@/assets/bg.jpg") no-repeat center;
+  background: url("/bg.jpg") no-repeat center;
   z-index: -2;
   opacity: 1;
   transition: opacity .5s ease;

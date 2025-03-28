@@ -28,7 +28,7 @@ const Like = async ()=>{
   }
   like.value = true
   try{
-    const res = await axios.post(local + "api/v1/article/like", {
+    const res = await axios.post(local + "/api/v1/article/like", {
       id: Number(route.currentRoute.value.params.id),
     },{
       headers: {
@@ -57,7 +57,7 @@ const Like = async ()=>{
 onMounted(async ()=>{
   let id = route.currentRoute.value.params.id
   try{
-    const res =await axios.get(local + "api/v1/article/"+id, {
+    const res =await axios.get(local + "/api/v1/article/"+id, {
     })
     if (res.status === 200) {
       if (res.data.error === true){

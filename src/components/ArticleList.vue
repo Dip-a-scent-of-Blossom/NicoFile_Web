@@ -11,26 +11,26 @@ import RecommendArtcle from "@/components/side/recommendArtcle.vue";
 import {Star, View} from "@element-plus/icons-vue";
 
 const FindList = ref([])
-FindList.value = [
-    {
-    "id":1,
-    "title":"文章标题t1",
-    "content":"文章内容c1",
-    "authorname":"作者a1",
-    "authorid":"1",
-    "view":24,
-    "like":0,
-    },
-    {
-    "id":2,
-    "title":"文章标题t2",
-    "content":"文章内容c2",
-    "authorname":"作者a1",
-    "authorid":"1",
-    "view":22,
-    "like":0,
-    }
-]
+// FindList.value = [
+//     {
+//     "id":1,
+//     "title":"文章标题t1",
+//     "content":"文章内容c1",
+//     "authorname":"作者a1",
+//     "authorid":"1",
+//     "view":24,
+//     "like":0,
+//     },
+//     {
+//     "id":2,
+//     "title":"文章标题t2",
+//     "content":"文章内容c2",
+//     "authorname":"作者a1",
+//     "authorid":"1",
+//     "view":22,
+//     "like":0,
+//     }
+// ]
 const auth = ref('')
 const totPage = ref(1)
 const currentPage = ref(1)
@@ -43,7 +43,7 @@ async function handleCurrentChange(val) {
 async function GetArticleList(page) {
   let res = null
   try {
-    res = await axios.post(local + "api/v1/article/list", {
+    res = await axios.post(local + "/api/v1/article/list", {
       page: page,
     }, {
       headers: {
@@ -71,7 +71,6 @@ async function GetArticleList(page) {
     )
     return
   }
-  FindList.value = res.data.list
   totPage.value = res.data.allpages
   currentPage.value = res.data.page
 }
@@ -99,7 +98,7 @@ onMounted(async ()=>{
       <el-icon><ArrowUpBold /></el-icon>
     </el-backtop>
     <div class="normal-container">
-      <div v-if="FindList.length ===0" >
+      <div v-if="!FindList ||  FindList.length === 0" >
         <article>
           <h1>文章列表</h1>
         </article>
@@ -111,7 +110,7 @@ onMounted(async ()=>{
                 <router-link :to="'/article/'+item.id" class="titleLink is-size-4" style="color:#368CCB">{{ item.title }}</router-link>
             </div>
             <div style="display: flex">
-              <el-image style="width: 100px; height: 100px" :src='local+"api/v1/img/download/"+item.cover' fit="cover" />
+              <el-image style="width: 100px; height: 100px" :src='local+"/api/v1/img/download/"+item.cover' v-if="item.cover!==null" fit="cover" />
                 <span class="two-line-ellipsis">
                         {{ item.content }}
                 </span>

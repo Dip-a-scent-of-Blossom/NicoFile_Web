@@ -36,10 +36,11 @@ const handleLogin = async () => {
     return
   }
   try {
-    const res  = await axios.post(local + 'api/v1/user/login',{
+    const res  = await axios.post(local + '/api/v1/user/login',{
       username: loginForm.username,
       password: loginForm.password
     })
+    console.log()
     if (res.status === 200) {
         var jwtDecodeVal = jwtDecode(res.data.token);
         console.log(jwtDecodeVal)
@@ -66,7 +67,7 @@ onMounted(async () => {
   let token =  localStorage.getItem("token")
   if (token !== null ) {
     try{
-      const res =await axios.post(local + "api/v1/user/loadtoken", {
+      const res =await axios.post(local + "/api/v1/user/loadtoken", {
       },{
         headers: {
           "Authorization": token,
@@ -91,6 +92,7 @@ onMounted(async () => {
         }
       }
     }catch( error){
+      console.log(error)
     }
   }
   validateInput()
