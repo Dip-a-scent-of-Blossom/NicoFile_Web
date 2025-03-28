@@ -6,6 +6,7 @@ import {onMounted, ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import UploadFile from "@/components/UploadFile.vue";
 import {ArrowDown, Edit, Upload} from "@element-plus/icons-vue";
+import Player from "@/components/side/player.vue";
 const dialogVisible = ref(false)
 
 const user = userStore()
@@ -35,6 +36,7 @@ onMounted(()=>{
 </script>
 
 <template>
+  <player/>
   <el-dialog
       v-model="dialogVisible"
       title="文件上传"
