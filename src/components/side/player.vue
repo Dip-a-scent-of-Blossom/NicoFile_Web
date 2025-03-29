@@ -5,15 +5,18 @@
 </script>
 <template>
   <div class="wrz_blog_music_player" :style="openPlayerStyle">
-    <embed
+    <iframe
         frameborder="no"
         border="0"
         marginwidth="0"
         marginheight="0"
         width=330
         height=86
-        src="//music.163.com/outchain/player?type=2&id=34722449&auto=1&height=66">
-    </embed>
+        src="/wy/outchain/player?type=2&id=34722449&auto=1&height=66"
+        allow="encrypted-media *"
+        sandbox="allow-scripts allow-same-origin"
+    >
+    </iframe>
 
   </div>
 
@@ -27,7 +30,7 @@
 .wrz_blog_music_player{
   position: fixed;
   overflow: hidden;
-  bottom: 162px;
+  bottom: 80px;
   left: -0px;
   transition: transform 0.5s ease;
   z-index: 2002;

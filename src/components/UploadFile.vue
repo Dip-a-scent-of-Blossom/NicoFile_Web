@@ -62,6 +62,7 @@ const merge = async ()=>{
 const submit = async () => {
   useable.value = false
   progress.value = 0
+  progressNow.value = ""
   let uploadFile = fileList.value[0]
   if (chunktotals.value > 0) {
     let md5arr = []
@@ -104,12 +105,26 @@ const submit = async () => {
       let end = Math.min(size.value, start + chunkSize);
       const files = uploadFile.raw.slice(start, end)
       console.log(files,start,end)
-      const result = await uploadFileToServer(local,files, chunkNumber , filename.value,md5arr[chunkNumber],Ext.value)
+      let result = await uploadFileToServer(local,files, chunkNumber , filename.value,md5arr[chunkNumber],Ext.value)
       if (result.status !== 200) {
+        if (result.status === 499){
+          result = await uploadFileToServer(local,files, chunkNumber , filename.value,md5arr[chunkNumber],Ext.value)
+          if (result.status !== 200){
+            ElNotification({
+              title: '上传失败',
+              message: '网络错误',
+              type: 'error',
+              position: 'bottom-right'
+            })
+            useable.value = true
+            return
+          }
+        }
         console.log(result.data,result)
         progress.value = 0
         progressNow.value = ''
         console.log("上传失败")
+        useable.value = true
         return
       }else{
         const percent =  ((hasupload.value +files.size)  / 1024 / 1024).toFixed(2);

@@ -21,7 +21,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/apis': {
-        target: 'http://127.0.0.1:8888',
+        target: 'http://152.32.133.174:8888',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/apis/, '') // 统一使用rewrite
       },
@@ -30,6 +30,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/vditor/, '')
       },
+      '/wy':{
+        target: 'http://music.163.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/wy/, '')
+      }
     }
   }
 })
