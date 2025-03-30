@@ -2,32 +2,29 @@
   <div class="comment">
     <!-- 当前评论内容 -->
     <div class="comment-content">
-      <div>
-        <span>
-          {{comment.authorname}}
-        {{comment.content}}
-        {{comment.createdat}}
-        </span>
-        <div style="display: flex">
-          <comment v-for="(comment2,index) in comment" :key="comment2.id" :comment="comment2"></comment>
+      <div style="display:flex">
+        <el-avatar :size="50" :src="local+'/api/v1/img/download/'+comment.cover" />
+        <div style="display:block;padding-left:8px;">
+            <span>
+            {{comment.authorname}}
+            </span>
+            <div class="comment-text">
+                <span>
+                {{ comment.content }}
+
+                </span>
+            </div>
+            <span>
+                
+                {{comment.createdat}}
+                <button class="reply-btn" @click="toggleReply">回复</button>
+            </span>
 
         </div>
+        
+       
       </div>
-      <div class="comment-author"><span>
-        {{ comment.authorname }}
-      </span></div>
-      <div class="comment-text">
-        <span>
-        {{ comment.content }}
-
-        </span>
-      </div>
-      <div class="comment-date">
-        <span>
-        {{ formatDate(comment.createdat) }}
-        </span>
-      </div>
-      <button class="reply-btn" @click="toggleReply">回复</button>
+      
     </div>
 
     <!-- 回复表单 (条件渲染) -->
@@ -50,8 +47,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import CommentForm from './commentForm.vue'
+import {local} from "@/assets/js/file.js";
 
 const props = defineProps({
   comment: {
@@ -71,11 +69,12 @@ const toggleReply = () => {
 }
 
 const handleReplySubmit = (replyData) => {
-  // 这里应该调用API提交回复
   console.log('回复内容:', replyData)
   // 提交成功后可以刷新评论列表或直接添加到当前评论的子评论中
   toggleReply()
 }
+onMounted(()=>{
+})
 </script>
 
 <style scoped lang="less">

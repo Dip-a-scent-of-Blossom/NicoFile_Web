@@ -25,7 +25,7 @@ const article  = ref({
 })
 const comments = ref([
   {
-    id:"2",
+    id:2,
     Article: 2,
     content: "评论内容1",
     createdat : "2024-07-29 12:00:00",
@@ -34,7 +34,7 @@ const comments = ref([
     cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
     comment :[
       {
-        id:"2",
+        id:2,
         Article: 2,
         content: "评论内容2",
         createdat : "2024-07-29 12:00:00",
@@ -44,7 +44,7 @@ const comments = ref([
         comment :[],
       },
       {
-        id:"2",
+        id:2,
         Article: 2,
         content: "评论内容3",
         createdat : "2024-07-29 12:00:00",
@@ -56,7 +56,7 @@ const comments = ref([
     ]
   },
   {
-    id:"2",
+    id:2,
     Article: 2,
     content: "评论内容4",
     createdat : "2024-07-29 12:00:00",

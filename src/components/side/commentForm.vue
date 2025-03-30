@@ -1,10 +1,6 @@
 <template>
   <div class="comment-form">
     <el-form :model="form" :rules="rules" ref="formRef">
-      <el-form-item prop="author">
-        <el-input v-model="form.author" placeholder="您的姓名" />
-      </el-form-item>
-
       <el-form-item prop="content">
         <el-input
             v-model="form.content"
@@ -16,7 +12,7 @@
 
       <div class="form-actions">
         <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button v-if="parentId" @click="$emit('cancel')">取消</el-button>
+        <el-button v-if="parentId" type="primary" @click="$emit('cancel')">取消</el-button>
       </div>
     </el-form>
   </div>
@@ -35,14 +31,10 @@ const props = defineProps({
 const emit = defineEmits(['submit', 'cancel'])
 
 const form = ref({
-  author: '',
   content: ''
 })
 
 const rules = ref({
-  author: [
-    { required: true, message: '请输入您的姓名', trigger: 'blur' }
-  ],
   content: [
     { required: true, message: '请输入评论内容', trigger: 'blur' }
   ]
@@ -55,7 +47,6 @@ const submitForm = async () => {
     await formRef.value.validate()
 
     const commentData = {
-      author: form.value.author,
       content: form.value.content
     }
 
@@ -79,14 +70,25 @@ const submitForm = async () => {
 @import "@/assets/css/article.less";
 
 .comment-form {
-  margin-bottom: 2rem;
-  padding: 1rem;
+  padding: 8px;
   background-color: @theme-second-color;
   border-radius: 4px;
 }
+.text-area{
 
+}
 .form-actions {
   display: flex;
   justify-content: flex-end;
 }
+
+:deep .el-textarea__inner{
+  --el-input-bg-color: @theme-background-color-light ;
+  --el-input-text-color: @theme-background-color-light;
+  background-color: @theme-background-color-light;
+  --el-input-text-color: @font-color;
+  --el-input-border-color: @border-color  ;
+  --el-input-focus-border-color: @theme-highlight-color;
+}
+
 </style>
