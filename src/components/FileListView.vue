@@ -120,13 +120,15 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div style="margin-left:50px;">
+    <div style="width: 300px">
       <div >
-        <RecommendArtcle>
-
-        </RecommendArtcle>
       </div>
     </div>
+
+
+    <RecommendArtcle>
+
+    </RecommendArtcle>
   </div>
 </template>
 

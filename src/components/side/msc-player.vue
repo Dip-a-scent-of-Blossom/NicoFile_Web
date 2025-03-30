@@ -282,7 +282,7 @@ onBeforeUnmount(() => {
   left: 20px;
   bottom: 20px;
   z-index: 1000;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
   /* 新增点击穿透 */
   pointer-events: none;
 }

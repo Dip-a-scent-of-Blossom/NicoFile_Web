@@ -44,6 +44,8 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="float-form">
+
   <div class="recommendBar">
     <div class="recommendArtcle">
       <div class="recommendArtcle-title">
@@ -120,6 +122,7 @@ onMounted(async () => {
     </div>
 
   </div>
+  </div>
 
 </template>
 
@@ -127,10 +130,7 @@ onMounted(async () => {
 @import "@/assets/css/container.less";
 @import "@/assets/css/color.less";
 .recommendBar{
-  @media screen and (max-width: 1300px) {
-    display: none;
-  }
-  margin-left: 24px;
+  //margin-left: 24px;
   padding-left: 24px;
   width: 300px;
   background: rgba(@theme-background-color,.95);
@@ -159,5 +159,14 @@ onMounted(async () => {
   border-radius: 4px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   z-index: 100;
+}
+
+.float-form{
+
+  @media screen and (max-width: 1400px) {
+    display: none;
+  }
+  position: fixed;
+  right:40px;
 }
 </style>

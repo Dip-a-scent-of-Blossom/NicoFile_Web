@@ -10,6 +10,8 @@ import Router from "@/router/index.js";
 import router from '@/router/index.js';
 import {ElNotification} from "element-plus";
 import {Star, View} from "@element-plus/icons-vue";
+import Comment from "@/components/side/comment.vue";
+import CommentList from "@/components/side/commentList.vue";
 const route = router
 const wikiContent = '' // 这里就是要展示的文章，一般从后端接口获取
 const article  = ref({
@@ -21,6 +23,49 @@ const article  = ref({
   view: 0,
   like:0,
 })
+const comments = ref([
+  {
+    id:"2",
+    Article: 2,
+    content: "评论内容1",
+    createdat : "2024-07-29 12:00:00",
+    authorid: 1,
+    authorname: "作者1",
+    cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
+    comment :[
+      {
+        id:"2",
+        Article: 2,
+        content: "评论内容2",
+        createdat : "2024-07-29 12:00:00",
+        authorid: 1,
+        authorname: "作者2",
+        cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
+        comment :[],
+      },
+      {
+        id:"2",
+        Article: 2,
+        content: "评论内容3",
+        createdat : "2024-07-29 12:00:00",
+        authorid: 1,
+        authorname: "作者3",
+        cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
+        comment :[],
+      }
+    ]
+  },
+  {
+    id:"2",
+    Article: 2,
+    content: "评论内容4",
+    createdat : "2024-07-29 12:00:00",
+    authorid: 1,
+    authorname: "作者4",
+    cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
+    comment :[],
+  }
+])
 const like  =ref(false)
 const Like = async ()=>{
   if (like.value === true){
@@ -134,6 +179,11 @@ onMounted(async ()=>{
           <div id="article"  >
 
           </div>
+          <div class="comments" >
+            <comment-list  :comment="comments" >
+
+            </comment-list>
+          </div>
         </div>
       </div>
   </div>
@@ -148,6 +198,12 @@ onMounted(async ()=>{
 #article-container{
   background-color: @theme-second-color-light;
   border-radius: 10px;
+}
+.comments{
+  background-color: @theme-second-color-light;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
 }
 .likeable{
   &:hover{
