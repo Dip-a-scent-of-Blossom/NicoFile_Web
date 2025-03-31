@@ -4,6 +4,7 @@ import {getFileMd5, sleep} from "@/assets/js/encyrpt.js";
 import {checkchunk, mergeFiles, uploadFileToServer,  local, useable,uploading} from "@/assets/js/file.js";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {ElNotification} from "element-plus";
+import {userStore} from "@/assets/js/store.js";
 
 const progress = ref(0)
 const progressNow = ref('')
@@ -18,7 +19,7 @@ const chunkSize = 1024 * 1024 * 5 // 每块文件大小   100mb
 const fileList = ref([])
 const oncalcing = ref(false)
 const desc = ref('')
-
+const user = userStore()
 
 async function RemoveFile(file, filelist) {
   console.log(file.name,file.status)
@@ -60,6 +61,15 @@ const merge = async ()=>{
   return res
 }
 const submit = async () => {
+  if (user.userToken === "") {
+    ElNotification({
+      title: '上传失败',
+      message: '请先登录',
+      type: 'error',
+      position: 'bottom-right'
+    })
+    return
+  }
   useable.value = false
   progress.value = 0
   progressNow.value = ""

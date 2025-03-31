@@ -37,7 +37,7 @@ const router = createRouter({
     },{
       path:'/list',
       name:'list',
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
       component:FileListView
     },{
       path:'/article/:id',
