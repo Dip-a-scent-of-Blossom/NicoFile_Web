@@ -1,13 +1,22 @@
 <script setup>
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import {ElNotification} from "element-plus";
 import axios from "axios";
 import {local} from "@/assets/js/file.js";
 import {ChangeUserName, ChangeUserPassword, DeleteUser} from "@/assets/js/user.js";
 import Router from "@/router/index.js";
+import {Plus} from "@element-plus/icons-vue";
+import {jwtDecode} from "jwt-decode";
 const user = userStore()
 const activeName = ref('first')
+
+const display = ref(true)
+const fileList = ref([])
+function DisplayFile(file, filelist) {
+  fileList.value = filelist
+  display.value = fileList.value.length <= 0;
+}
 
 const tabswitch = (tab, event) => {
 }
@@ -15,6 +24,38 @@ const form = reactive({
   newUsername:user.getUserName,
   newPassword:'',
 })
+const updateCover = async ()=>{
+  let res = null
+  let form = new FormData();
+  if (fileList.value.length <= 0) {
+    return
+  }
+  form.append("pic", fileList.value[0].raw);
+  try {
+    res = await axios.post(local+"/api/v1/user/upload",form, {
+      headers: {
+        "Authorization": localStorage.getItem("token"),
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  if (res.status === 200) {
+    ElNotification({
+      title: '头像更新成功',
+      message: '头像更新成功',
+      type: 'success',
+      position: 'bottom-right',
+    });
+  } else {
+    ElNotification({
+      title: '头像更新失败',
+      message: '头像更新失败',
+      type: 'error',
+      position: 'bottom-right',
+    });
+  }
+}
 const updateUsername =async () => {
   let res = await ChangeUserName(form.newUsername)
   if (res.success) {
@@ -74,6 +115,12 @@ const DeleteUserHandle =async () => {
     });
   }
 }
+
+onMounted(()=>{
+  let token = localStorage.getItem("token")
+  let jwtDecodeVal = jwtDecode(token);
+  user.id = jwtDecodeVal.UserId
+})
 </script>
 
 <template>
@@ -129,6 +176,47 @@ const DeleteUserHandle =async () => {
                           </el-form-item>
                         </div>
 
+                      </div>
+                      <div class="columns">
+                        <div class="column" style="padding-top: 0">
+                          <el-image style="width: 148px;height: 148px;" :src="local+'/api/v1/img/cover/'+user.id+'?_='+new Date().getTime()">
+
+                          </el-image>
+                        </div>
+                        <div class="column" style="display: flex;">
+                          <span style="margin: auto 0;font-size: 24px;font-weight: 700;">=></span>
+                        </div>
+                        <div style="padding-left: 16px"
+                             class="freePic"
+                        >
+                          <el-upload
+                              ref = "upload"
+                              drag
+                              action="#"
+                              list-type="picture-card"
+                              :auto-upload="false"
+                              :file-list="fileList"
+                              :limit="1"
+                              :on-change="DisplayFile"
+                              :class="{ 'has-file': !display }"
+                              :on-remove="DisplayFile"
+                          >
+                            <template #trigger >
+                              <div class="el-upload__text" style="color: black">
+                                <el-icon color="#000"><Plus /></el-icon>
+                                <span style="color:#000;">
+                    更换新头像
+                  </span>
+                              </div>
+                            </template>
+                          </el-upload>
+                        </div>
+                        <div class="column">
+
+                          <el-button type="primary"  @click="updateCover">
+                            提交新头像
+                          </el-button>
+                        </div>
                       </div>
                     </el-form>
                     <div class="" style="display: flex;flex-direction: column">
@@ -187,4 +275,19 @@ const DeleteUserHandle =async () => {
 @import "@/assets/css/color.less";
 @import "@/assets/css/elOverWrite.less";
 
+
+:deep .el-upload-dragger{
+  height: 100%;
+  width: 100%;
+  padding: 60px 10px;
+  background: transparent !important;
+  border:   none !important;
+}
+/* 默认显示上传按钮 */
+:deep(.el-upload--picture-card) {
+  display: inline-flex;
+}
+.freePic ::v-deep .has-file .el-upload--picture-card {
+  display: none;
+}
 </style>

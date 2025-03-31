@@ -3,10 +3,10 @@
     <!-- 当前评论内容 -->
     <div class="comment-content">
       <div style="display:flex">
-        <el-avatar :size="50" :src="local+'/api/v1/img/download/'+comment.cover" />
+        <el-avatar :size="50" :src="local+'/api/v1/img/cover/'+comment.authorid+'?_='+new Date().getTime()" />
         <div style="display:block;padding-left:8px;">
             <span>
-            {{comment.authorname}}
+            {{comment.author}}
             </span>
             <div class="comment-text">
                 <span>
@@ -18,11 +18,10 @@
                 
                 {{comment.createdat}}
                 <button class="reply-btn" @click="toggleReply">回复</button>
+                <button class="reply-btn" style="" @click="toggleDelete">删除</button>
             </span>
 
         </div>
-        
-       
       </div>
       
     </div>
@@ -30,15 +29,14 @@
     <!-- 回复表单 (条件渲染) -->
     <CommentForm
         v-if="showReplyForm"
-        :parent-id="comment.id"
         @submit="handleReplySubmit"
         @cancel="toggleReply"
     />
 
     <!-- 嵌套的子评论 -->
-    <div class="comment-replies" v-if="comment.comment && comment.comment.length">
+    <div class="comment-replies" v-if="comment.comments && comment.comments.length">
       <Comment
-          v-for="reply in comment.comment"
+          v-for="reply in comment.comments"
           :key="reply.id"
           :comment="reply"
       />
@@ -50,6 +48,8 @@
 import { ref,onMounted } from 'vue'
 import CommentForm from './commentForm.vue'
 import {local} from "@/assets/js/file.js";
+import axios from "axios";
+import {ElNotification} from "element-plus";
 
 const props = defineProps({
   comment: {
@@ -63,14 +63,45 @@ const showReplyForm = ref(false)
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleString()
 }
-
+const toggleDelete =async ()=>{
+  let res = await axios.delete(local+"/api/v1/comment/"+props.comment.id, {
+    headers: {
+      "Authorization": localStorage.getItem("token"),
+    }
+  })
+  console.log(res)
+  if (res.status === 200) {
+    props.comment.content = "该评论已被删除"
+  }else{
+    ElNotification({
+      title: '删除失败',
+      message: '服务器错误',
+      type: 'error',
+      position: 'bottom-right'
+    })
+  }
+}
 const toggleReply = () => {
   showReplyForm.value = !showReplyForm.value
 }
 
 const handleReplySubmit = (replyData) => {
-  console.log('回复内容:', replyData)
-  // 提交成功后可以刷新评论列表或直接添加到当前评论的子评论中
+  let v = props.comment.id
+  if (props.comment.parentid === 0){
+    v = props.comment.id
+  }else{
+    v = props.comment.parentid
+  }
+
+  let res = axios.post(local+"/api/v1/comment",{
+    articleid:props.comment.articleid,
+    content:replyData.content,
+    parentid: v
+  }, {
+    headers: {
+      "Authorization": localStorage.getItem("token"),
+    }
+  })
   toggleReply()
 }
 onMounted(()=>{
@@ -117,9 +148,20 @@ onMounted(()=>{
   cursor: pointer;
   padding: 0;
   font-size: 0.85rem;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-.reply-btn:hover {
-  text-decoration: underline;
+.delete-btn {
+  background: none;
+  border: none;
+  color: orangered;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

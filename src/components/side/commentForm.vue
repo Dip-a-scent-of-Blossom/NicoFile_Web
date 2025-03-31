@@ -22,7 +22,7 @@
 import { ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
-  parentId: {
+  parentid: {
     type: Number,
     default: null
   }
@@ -50,9 +50,6 @@ const submitForm = async () => {
       content: form.value.content
     }
 
-    if (props.parentId) {
-      commentData.parentId = props.parentId
-    }
 
     emit('submit', commentData)
     form.value.content = ''

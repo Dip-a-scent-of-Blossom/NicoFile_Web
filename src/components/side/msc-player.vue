@@ -255,8 +255,9 @@ onMounted(async () => {
   isMusicPlaying.value = false
   await sleep(500)
   // await playCurrent()
-  // toggleMusic()
   await sleep(2000)
+  toggleMusic()
+  bgMusic.value.play()
   isPlayerVisible.value = false
 
 })

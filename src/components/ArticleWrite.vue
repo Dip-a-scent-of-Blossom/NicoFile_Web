@@ -145,9 +145,6 @@ onBeforeUnmount(()=>{
   background: transparent !important;
   border:   none !important;
 }
-//:deep .el-upload--picture-card{
-//  display: none !important;
-//}
 /* 默认显示上传按钮 */
 :deep(.el-upload--picture-card) {
   display: inline-flex;

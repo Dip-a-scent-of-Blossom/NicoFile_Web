@@ -25,6 +25,7 @@ const cutName = (value) =>{
 }
 const clear=()=>{
   localStorage.removeItem("token")
+  localStorage.removeItem("username")
   user.$reset();
   Router.push('/login')
 }
@@ -92,7 +93,7 @@ onMounted(()=>{
             </el-badge>
           </a>
 
-          <div class="navbar-item has-dropdown is-hoverable" v-if=" user.userToken!==''">
+          <div class="navbar-item has-dropdown is-hoverable" v-if=" user.username!==null ">
             <a style="" class="is-size-6 navbar-item">
               {{cutName(user.username)}}
             </a>
@@ -139,7 +140,7 @@ onMounted(()=>{
         </div>
 
 
-        <div class="navbar-item has-dropdown is-hoverable" v-if="user.userToken!==''">
+        <div class="navbar-item has-dropdown is-hoverable" v-if="user.username!==null">
 
           <el-dropdown class="" :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">
             <a style="padding: 3px 6px; outline: none !important;display: flex;align-items: center;" class="is-size-6 navbar-link">

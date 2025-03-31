@@ -11,7 +11,7 @@ import router from '@/router/index.js';
 import {ElNotification} from "element-plus";
 import {Star, View} from "@element-plus/icons-vue";
 import Comment from "@/components/side/comment.vue";
-import CommentList from "@/components/side/commentList.vue";
+import CommentForm from "@/components/side/commentForm.vue";
 const route = router
 const wikiContent = '' // 这里就是要展示的文章，一般从后端接口获取
 const article  = ref({
@@ -24,47 +24,7 @@ const article  = ref({
   like:0,
 })
 const comments = ref([
-  {
-    id:2,
-    Article: 2,
-    content: "评论内容1",
-    createdat : "2024-07-29 12:00:00",
-    authorid: 1,
-    authorname: "作者1",
-    cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
-    comment :[
-      {
-        id:2,
-        Article: 2,
-        content: "评论内容2",
-        createdat : "2024-07-29 12:00:00",
-        authorid: 1,
-        authorname: "作者2",
-        cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
-        comment :[],
-      },
-      {
-        id:2,
-        Article: 2,
-        content: "评论内容3",
-        createdat : "2024-07-29 12:00:00",
-        authorid: 1,
-        authorname: "作者3",
-        cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
-        comment :[],
-      }
-    ]
-  },
-  {
-    id:2,
-    Article: 2,
-    content: "评论内容4",
-    createdat : "2024-07-29 12:00:00",
-    authorid: 1,
-    authorname: "作者4",
-    cover : "20250328162618-a1ef6b97-4347-44e3-9c69-724cbba8c88b.jpg",
-    comment :[],
-  }
+
 ])
 const like  =ref(false)
 const Like = async ()=>{
@@ -98,11 +58,14 @@ const Like = async ()=>{
       position: 'bottom-right'
     })
   }
+
 }
+const id = ref('')
 onMounted(async ()=>{
-  let id = route.currentRoute.value.params.id
+  console.log(route.currentRoute.value.params.id)
+  id.value = route.currentRoute.value.params.id
   try{
-    const res =await axios.get(local + "/api/v1/article/"+id, {
+    const res =await axios.get(local + "/api/v1/article/"+id.value, {
     })
     if (res.status === 200) {
       if (res.data.error === true){
@@ -128,7 +91,25 @@ onMounted(async ()=>{
   }catch(error){
 
   }
+  try{
+    const res =await axios.get(local + "/api/v1/comment/list?articleid="+id.value, {
+    })
+    if (res.status === 200) {
+      if (res.data.error === true){
+        ElNotification({
+          message: '文章不存在',
+          type: 'error'
+        })
+        router.push("/")
+        return
+      }
+      comments.value = res.data.list
+    }else{
 
+    }
+  }catch(error){
+
+  }
   await Vditor.preview( document.getElementById('article'), article.value.content, {
     speech: {
       enable: false,
@@ -140,7 +121,20 @@ onMounted(async ()=>{
   })
 
 })
+const handleNewComment = (commentData) => {
 
+  let res = axios.post(local+"/api/v1/comment",{
+    articleid:Number(id.value),
+    content:commentData.content,
+    parentid:0
+  }, {
+    headers: {
+      "Authorization": localStorage.getItem("token"),
+    }
+  })
+  console.log('新评论:', commentData)
+  // 提交成功后可以刷新评论列表或直接添加到comments数组
+}
 </script>
 
 <template>
@@ -180,9 +174,24 @@ onMounted(async ()=>{
 
           </div>
           <div class="comments" >
-            <comment-list  :comment="comments" >
+            <div class="comment-list">
+              <h3>评论 ({{ comments.length }})</h3>
 
-            </comment-list>
+              <CommentForm @submit="handleNewComment" :parent-id="0" />
+
+              <div v-if="comments.length > 0">
+                <Comment
+                    v-for="comment in comments"
+                    :key="comment.id"
+                    :comment="comment"
+                    :authorId="article.authorId"
+                />
+              </div>
+
+              <div v-else class="no-comments">
+                暂无评论，快来发表第一条评论吧！
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -200,7 +209,6 @@ onMounted(async ()=>{
   border-radius: 10px;
 }
 .comments{
-  background-color: @theme-second-color-light;
   border-radius: 10px;
   padding: 16px;
   margin-top: 16px;
@@ -212,5 +220,18 @@ onMounted(async ()=>{
 }
 .likeColor{
   color: @theme-highlight-color;
+}
+
+.comment-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: @theme-second-color;
+}
+
+.no-comments {
+  padding: 1rem;
+  text-align: center;
+  color: @font-color;
 }
 </style>

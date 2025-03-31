@@ -7,14 +7,7 @@ import {local} from "@/assets/js/file.js";
 const user = userStore()
 const showpic = ref(false)
 const article = ref([
-  {
-    title: '文章标题a',
-    link: '/article/1',
-  },
-  {
-    title: '文章标题b',
-    link: '/article/2',
-  },
+
 ])
 const board = ref([
   {
@@ -105,18 +98,27 @@ onMounted(async () => {
       >
   </div>
   <div>
-    <div class="recommendBar">
+    <div class="recommendBar" style="padding-bottom: 24px;">
       <div class="recommendArtcle">
         <div class="recommendArtcle-title">
           <h2 style="margin: 14px 0;padding-top: 14px">推荐文章</h2>
         </div>
-        <div v-for="(item, index) in article" :key="item.id" >
-          <div >
-            <span style="margin-right: 10px;color:#f0f0f0 ">{{index+1}}</span>
-            <router-link :to="'/article/'+item.id" class="recommendArtcle-item-title"  >
-              <span >{{item.title}}</span>
-            </router-link>
+        <div v-if="article.length>0">
+
+          <div v-for="(item, index) in article" :key="item.id" >
+            <div >
+              <span style="margin-right: 10px;color:#f0f0f0 ">{{index+1}}</span>
+              <router-link :to="'/article/'+item.id" class="recommendArtcle-item-title"  >
+                <span >{{item.title}}</span>
+              </router-link>
+            </div>
           </div>
+        </div>
+        <div v-else style="height: 100%">
+          <span>
+            排行榜小姐睡着了，去叫醒她吧
+          </span>
+          <el-image style="width: 240px;" src="/NotFound.png"></el-image>
         </div>
       </div>
     </div>
