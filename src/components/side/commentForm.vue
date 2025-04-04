@@ -12,7 +12,7 @@
 
       <div class="form-actions">
         <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button v-if="parentId" type="primary" @click="$emit('cancel')">取消</el-button>
+        <el-button type="primary" @click="$emit('cancel')">取消</el-button>
       </div>
     </el-form>
   </div>

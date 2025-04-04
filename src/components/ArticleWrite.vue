@@ -43,9 +43,19 @@ const submitArticle = async ()=> {
       }
     })
     let picurl = res.data.url
+    if (picurl === undefined) {
+      ElNotification({
+        title: '上传失败',
+        message: '服务器错误',
+        type: 'error',
+        position: 'bottom-right'
+      })
+      return
+    }
     res =await  axios.post(local+'/api/v1/article', {
       content: editor.value.getValue(),
       title: title.value,
+      cover: picurl
     }, {
       headers: {
         "Authorization": localStorage.getItem("token"),
