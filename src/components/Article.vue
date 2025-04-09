@@ -12,7 +12,9 @@ import {ElNotification} from "element-plus";
 import {Star, View} from "@element-plus/icons-vue";
 import Comment from "@/components/side/comment.vue";
 import CommentForm from "@/components/side/commentForm.vue";
+import {userStore} from "@/assets/js/store.js";
 const route = router
+const user =  userStore()
 const wikiContent = '' // 这里就是要展示的文章，一般从后端接口获取
 const article  = ref({
   content:"",
@@ -23,9 +25,11 @@ const article  = ref({
   view: 0,
   like:0,
 })
-const comments = ref([
-
-])
+const isEditing = ref(false)
+const editable = ref(false)
+const editor = ref()
+const newTitle = ref('')
+const comments = ref([])
 const like  =ref(false)
 const Like = async ()=>{
   if (like.value === true){
@@ -119,7 +123,20 @@ onMounted(async ()=>{
     },
 
   })
-
+  newTitle.value = article.value.title
+  editor.value = new Vditor("article-editor", {
+    toolbarConfig: {
+      pin: true,
+    },
+    value:article.value.content,
+    height: '80vh',
+    mode: 'ir',
+    placeholder: '开始写作吧',
+    after() {
+      console.log("editor ready")
+    },
+  })
+  console.log(user.id.toString(),article.value.authorId,editable.value)
 })
 const handleNewComment = (commentData) => {
 
@@ -134,6 +151,36 @@ const handleNewComment = (commentData) => {
   })
   console.log('新评论:', commentData)
   // 提交成功后可以刷新评论列表或直接添加到comments数组
+}
+const switchHandler = ()=>{
+  console.log(isEditing.value)
+  isEditing.value = !isEditing.value;
+}
+const submitArticle = async ()=>{
+  let res = null
+  try {
+    res = await axios.put(local + "/api/v1/article/"+id.value, {
+      content: editor.value.getValue(),
+      title: article.value.title,
+    }, {
+      headers: {
+        "Authorization": localStorage.getItem("token"),
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  console.log(res)
+  if (res.status === 200) {
+    router.push("/article/" + id.value)
+  } else {
+    ElNotification({
+      title: '上传失败',
+      message: '服务器错误',
+      type: 'error',
+      position: 'bottom-right'
+    })
+  }
 }
 </script>
 
@@ -155,6 +202,7 @@ const handleNewComment = (commentData) => {
             <div style="float:right;display: flex;flex-direction: column;padding-left: 16px">
               <span style="font-weight: bold;">发布时间</span>
               <span>{{article.created_at}}</span>
+              <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="switchHandler" type="primary" style="width: 60px" >修改</el-button>
             </div>
 
             <div style="float:right;margin-top:24px;padding-left: 16px" >
@@ -170,8 +218,26 @@ const handleNewComment = (commentData) => {
               </span>
             </div>
           </div>
-          <div id="article"  >
+          <div v-show="!isEditing" >
+            <div>
+              <el-image :src="article.cover">
 
+              </el-image>
+            </div>
+            <div id="article" >
+
+            </div>
+          </div>
+          <div v-show="isEditing">
+            <div class="vditor-reset" style="padding-bottom: 10px">
+              文章标题: <el-input type="text" v-model="newTitle" style="width: 80%;height: 40px"/>
+            </div>
+            <div id="article-editor"  >
+
+            </div>
+            <div  style="padding:15px 15px 0px 15px;margin-left: auto">
+              <el-button style="top:70%;position: relative" type="primary" @click="submitArticle" >保存</el-button>
+            </div>
           </div>
           <div class="comments" >
             <div class="comment-list">

@@ -8,7 +8,7 @@ import router from "@/router/index.js";
 import {userStore} from "@/assets/js/store.js";
 import {ElNotification} from "element-plus";
 import RecommendArtcle from "@/components/side/recommendArtcle.vue";
-import {ArrowUpBold, Star, View} from "@element-plus/icons-vue";
+import {Star, View} from "@element-plus/icons-vue";
 
 const FindList = ref([])
 // FindList.value = [
@@ -38,13 +38,15 @@ const pagesize = ref(10)
 const user = userStore()
 async function handleCurrentChange(val) {
   // await Router.push("/?p=" + val)
-  await Route.push({path:'/list',query: {p:val}})
+  await Route.push({path:'/search',query: {p:val,keyword:Route.currentRoute.value.query.keyword}})
 }
-async function GetArticleList(page) {
+async function GetArticleList(page,keyword) {
   let res = null
   try {
-    res = await axios.post(local + "/api/v1/article/list", {
+    res = await axios.post(local + "/api/v1/article/search", {
       page: page,
+      size: 20,
+      keyword: keyword,
     }, {
       headers: {
         "Authorization": localStorage.getItem("token"),
@@ -87,7 +89,7 @@ onMounted(async ()=>{
     pagesize.value = Number(size)
   }
   auth.value = localStorage.getItem("token")
-  await GetArticleList(currentPage.value)
+  await GetArticleList(currentPage.value,Route.currentRoute.value.query.keyword)
 })
 
 </script>
@@ -102,32 +104,32 @@ onMounted(async ()=>{
         <article>
           <h1>文章列表</h1>
         </article>
-        <span>暂无文章</span>
+        <span>没有找到对应的文章>.<</span>
       </div>
       <div v-else style="width: auto" >
         <div v-for="(item,index) in FindList" :key="item.id" class="articlePreview" >
-            <div slot="header"  style="margin-bottom: 8px">
-                <router-link :to="'/article/'+item.id" class="titleLink is-size-4" style="color:#368CCB">{{ item.title }}</router-link>
-            </div>
-            <div style="display: flex">
-              <el-image style="width: 100px; height: 100px" :src='local+"/api/v1/img/download/"+item.cover' v-if="item.cover!==null" fit="cover" />
-                <span class="two-line-ellipsis">
+          <div slot="header"  style="margin-bottom: 8px">
+            <router-link :to="'/article/'+item.id" class="titleLink is-size-4" style="color:#368CCB">{{ item.title }}</router-link>
+          </div>
+          <div style="display: flex">
+            <el-image style="width: 100px; height: 100px" :src='local+"/api/v1/img/download/"+item.cover' v-if="item.cover!==null" fit="cover" />
+            <span class="two-line-ellipsis">
                         {{ item.content }}
                 </span>
-            </div>
-            <div class="info is-size-5">
-                <span> {{ item.authorname }}</span>
-                <span> {{ item.createdat }}</span>
-                <span>
+          </div>
+          <div class="info is-size-5">
+            <span> {{ item.authorname }}</span>
+            <span> {{ item.createdat }}</span>
+            <span>
                 <el-icon ><View /></el-icon>
                   {{ item.view }}
                 </span>
-                <span>
+            <span>
                 <el-icon><Star /></el-icon>
                   {{ item.like }}
                 </span>
 
-            </div>
+          </div>
         </div>
         <div
             class="container"
@@ -167,8 +169,6 @@ onMounted(async ()=>{
   background-color: rgba(@theme-background-color,0.85);
   padding:12px 12px 12px 12px;
   margin-top: 16px;
-  margin-left: 16px;
-  margin-right: 16px;
   border-radius: 16px;
   width: auto;
 }
@@ -181,9 +181,9 @@ onMounted(async ()=>{
   padding: 0;
 }
 .titleLink{
-    &:hover{
-        color:#ff6600 !important;
-    }
+  &:hover{
+    color:#ff6600 !important;
+  }
 }
 .two-line-ellipsis {
   margin: 16px 0 16px 8px;

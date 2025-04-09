@@ -9,6 +9,7 @@ import ArticleList from "@/components/ArticleList.vue";
 import axios from "axios";
 import {local} from "@/assets/js/file.js";
 import {jwtDecode} from "jwt-decode";
+import ArticheSearchList from "@/components/ArticheSearchList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,12 @@ const router = createRouter({
       name:'articleList',
       meta: { requiresAuth: false  },
       component:ArticleList,
+    },
+    {
+      path:'/search',
+        name:'search',
+      meta:{ requiresAuth: false },
+      component:ArticheSearchList,
     }
   ],
 })

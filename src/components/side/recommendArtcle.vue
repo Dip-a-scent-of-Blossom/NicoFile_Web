@@ -133,7 +133,8 @@ onMounted(async () => {
 @import "@/assets/css/color.less";
 .recommendBar{
   //margin-left: 24px;
-  padding-left: 24px;
+  padding-left: 12px;
+  padding-right: 12px;
   width: 300px;
   background: rgba(@theme-background-color,.95);
   border-radius: 16px;

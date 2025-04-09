@@ -31,7 +31,6 @@ onMounted(async () => {
   })
 })
 const submitArticle = async ()=> {
-  console.log(editor.value.getValue())
   let res = null
   let form = new FormData();
   form.append("pic", fileList.value[0].raw);

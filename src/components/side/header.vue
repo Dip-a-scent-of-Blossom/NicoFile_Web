@@ -5,9 +5,11 @@ import Router from "@/router/index.js";
 import {onMounted, ref} from "vue";
 import {userStore} from "@/assets/js/store.js";
 import UploadFile from "@/components/UploadFile.vue";
-import {ArrowDown, Edit, Upload} from "@element-plus/icons-vue";
+import {ArrowDown, Edit, Upload,Search} from "@element-plus/icons-vue";
 import Player from "@/components/side/player.vue";
 import MscPlayer from "@/components/side/msc-player.vue";
+import {jwtDecode} from "jwt-decode";
+import {ElNotification} from "element-plus";
 const dialogVisible = ref(false)
 
 const user = userStore()
@@ -29,10 +31,23 @@ const clear=()=>{
   user.$reset();
   Router.push('/login')
 }
-
+const keyword = ref('')
+const search = ()=>{
+  if (keyword.value === '' || keyword.value === undefined || keyword.value === null){
+    ElNotification({
+      title: '搜索失败',
+      message: '请输入搜索内容',
+      type: 'error',
+      position: 'bottom-right'
+    })
+    return
+  }
+  router.push("/search?p=1&keyword="+keyword.value)
+}
 const drawer = ref(false)
 onMounted(()=>{
   user.username = localStorage.getItem("username")
+  user.id = jwtDecode(localStorage.getItem("token")).UserId
   user.userToken = localStorage.getItem("token")
 })
 </script>
@@ -93,7 +108,7 @@ onMounted(()=>{
             </el-badge>
           </a>
 
-          <div class="navbar-item has-dropdown is-hoverable" v-if=" user.username!==null ">
+          <div class="navbar-item has-dropdown is-hoverable" v-if=" user.username!=='' ">
             <a style="" class="is-size-6 navbar-item">
               {{cutName(user.username)}}
             </a>
@@ -128,6 +143,16 @@ onMounted(()=>{
         <router-link to="/list" class="navbar-item is-size-6">文件</router-link>
       </div>
       <div class="navbar-end" style="background-color: transparent">
+        <div style="display: flex">
+
+          <el-input style="margin:auto 0;height: 40px" v-model="keyword" placeholder="搜索文章" >
+            <template #append class="el-input-group__append" >
+              <el-button slot="append" color="#000000" @click="search">
+                <el-icon style="color:#000000" color="#000000" size="16"><Search /></el-icon>
+              </el-button>
+            </template>
+          </el-input>
+        </div>
         <router-link to="/article" class="navbar-item is-size-6"><el-icon><Edit /></el-icon>写文章</router-link>
         <div class="navbar-item" style="">
           <el-badge :value="uploading"
@@ -140,7 +165,7 @@ onMounted(()=>{
         </div>
 
 
-        <div class="navbar-item has-dropdown is-hoverable" v-if="user.username!==null">
+        <div class="navbar-item has-dropdown is-hoverable" v-if="user.username!==''">
 
           <el-dropdown class="" :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">
             <a style="padding: 3px 6px; outline: none !important;display: flex;align-items: center;" class="is-size-6 navbar-link">
