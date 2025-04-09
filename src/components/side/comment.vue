@@ -18,7 +18,7 @@
                 
                 {{comment.createdat}}
                 <button class="reply-btn" @click="toggleReply">回复</button>
-                <button class="reply-btn" style="" @click="toggleDelete">删除</button>
+                <button class="reply-btn" style="" @click="toggleDelete" v-if="authorId===user.id.toString()">删除</button>
             </span>
 
         </div>
@@ -50,14 +50,19 @@ import CommentForm from './commentForm.vue'
 import {local} from "@/assets/js/file.js";
 import axios from "axios";
 import {ElNotification} from "element-plus";
+import {userStore} from "@/assets/js/store.js";
 
 const props = defineProps({
   comment: {
     type: Object,
     required: true
+  },
+  authorId:{
+    type: String,
+    required: true
   }
 })
-
+const user = userStore()
 const showReplyForm = ref(false)
 
 const formatDate = (dateString) => {

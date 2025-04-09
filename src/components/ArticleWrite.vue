@@ -33,6 +33,15 @@ onMounted(async () => {
 const submitArticle = async ()=> {
   let res = null
   let form = new FormData();
+  if (fileList.value.length <=0 ){
+    ElNotification({
+      title: '上传失败',
+      message: '请添加封面',
+      type: 'error',
+      position: 'bottom-right'
+    })
+    return
+  }
   form.append("pic", fileList.value[0].raw);
   try {
 

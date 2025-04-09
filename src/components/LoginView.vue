@@ -40,7 +40,6 @@ const handleLogin = async () => {
       username: loginForm.username,
       password: loginForm.password
     })
-    console.log()
     if (res.status === 200) {
         var jwtDecodeVal = jwtDecode(res.data.token);
         console.log(jwtDecodeVal)

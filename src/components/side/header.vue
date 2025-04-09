@@ -34,15 +34,10 @@ const clear=()=>{
 const keyword = ref('')
 const search = ()=>{
   if (keyword.value === '' || keyword.value === undefined || keyword.value === null){
-    ElNotification({
-      title: '搜索失败',
-      message: '请输入搜索内容',
-      type: 'error',
-      position: 'bottom-right'
-    })
+    Router.push('/')
     return
   }
-  router.push("/search?p=1&keyword="+keyword.value)
+  Router.push("/search?p=1&keyword="+keyword.value)
 }
 const drawer = ref(false)
 onMounted(()=>{

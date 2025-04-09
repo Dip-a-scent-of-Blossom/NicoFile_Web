@@ -182,10 +182,49 @@ const submitArticle = async ()=>{
     })
   }
 }
+const visable = ref(false)
+const deleteArticle= async ()=>{
+  visable.value = false
+  let res = null
+  try {
+    res = await axios.delete(local + "/api/v1/article/"+id.value, {
+      headers: {
+        "Authorization": localStorage.getItem("token"),
+      }
+    })
+    if (res.status ===200){
+      ElNotification({
+        title: '',
+        message: res.data.message,
+        type: 'info',
+        position: 'bottom-right'
+      })
+      router.push("/")
+    }else{
+
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
-
+  <el-dialog
+      v-if="article.authorId === user.id.toString()"
+      title="警告"
+      v-model="visable"
+  >
+    <span>文章删除无法恢复，是否删除？</span>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="visable = false" type="primary">取消</el-button>
+        <el-button type="danger" @click="deleteArticle">
+          确定
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
   <div class="container">
       <div class="normal-container" >
         <div class="container" id ="article-container" style="padding:16px 24px;border-radius: 10px">
@@ -202,7 +241,10 @@ const submitArticle = async ()=>{
             <div style="float:right;display: flex;flex-direction: column;padding-left: 16px">
               <span style="font-weight: bold;">发布时间</span>
               <span>{{article.created_at}}</span>
-              <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="switchHandler" type="primary" style="width: 60px" >修改</el-button>
+              <div style="display: block">
+                <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="switchHandler" type="primary" style="width: 60px" >修改</el-button>
+                <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="visable=true" type="danger" style="width: 60px" >删除</el-button>
+              </div>
             </div>
 
             <div style="float:right;margin-top:24px;padding-left: 16px" >

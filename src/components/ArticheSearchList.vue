@@ -53,12 +53,13 @@ async function GetArticleList(page,keyword) {
       },
     })
   }catch (e) {
-    console.log(e)
+    // console.log(e)
   }
   if (res.status === 401){
     localStorage.removeItem("token")
+    localStorage.removeItem("username")
     user.$reset()
-    router.push("/login")
+    await Route.push("/login")
     return
   }else if (res.status === 200) {
     FindList.value = res.data.list
