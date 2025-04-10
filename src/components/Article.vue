@@ -1,6 +1,6 @@
 <script setup>
 import Vditor from 'vditor'
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, ref} from "vue";
 import 'vditor/dist/index.css';
 import '@/assets/css/article.less'
 import axios from "axios";
@@ -88,6 +88,7 @@ onMounted(async ()=>{
         created_at: res.data.createdat,
         view: Number(res.data.view),
         like: Number(res.data.like),
+        cover:res.data.cover,
       }
     }else{
       
@@ -108,35 +109,40 @@ onMounted(async ()=>{
         return
       }
       comments.value = res.data.list
+      await Vditor.preview( document.getElementById('article'), article.value.content, {
+        speech: {
+          enable: false,
+        },
+        anchor: 1,
+        after() {
+        },
+
+      })
+      newTitle.value = article.value.title
+      editor.value = new Vditor("article-editor", {
+        toolbarConfig: {
+          pin: true,
+        },
+        value:article.value.content,
+        height: '80vh',
+        mode: 'ir',
+        placeholder: '开始写作吧',
+        after() {
+          console.log("editor ready")
+        },
+      })
+      editor.value.setValue(article.value.content)
     }else{
 
     }
   }catch(error){
 
   }
-  await Vditor.preview( document.getElementById('article'), article.value.content, {
-    speech: {
-      enable: false,
-    },
-    anchor: 1,
-    after() {
-    },
 
-  })
-  newTitle.value = article.value.title
-  editor.value = new Vditor("article-editor", {
-    toolbarConfig: {
-      pin: true,
-    },
-    value:article.value.content,
-    height: '80vh',
-    mode: 'ir',
-    placeholder: '开始写作吧',
-    after() {
-      console.log("editor ready")
-    },
-  })
-  console.log(user.id.toString(),article.value.authorId,editable.value)
+  // console.log(user.id.toString(),article.value.authorId,editable.value,article.value.cover)
+})
+onBeforeUnmount(() => {
+  editor.value.destroy()
 })
 const handleNewComment = (commentData) => {
 
@@ -161,26 +167,38 @@ const submitArticle = async ()=>{
   try {
     res = await axios.put(local + "/api/v1/article/"+id.value, {
       content: editor.value.getValue(),
-      title: article.value.title,
+      title: newTitle.value,
     }, {
       headers: {
         "Authorization": localStorage.getItem("token"),
       }
     })
+    if (res.status === 200) {
+      article.value.content = editor.value.getValue()
+      article.value.title = newTitle.value
+      isEditing.value = false
+      await Vditor.preview( document.getElementById('article'), article.value.content, {
+        speech: {
+          enable: false,
+        },
+        anchor: 1,
+        after() {
+        },
+      })
+      // router.push("/article/" + id.value)
+    } else {
+      ElNotification({
+        title: '上传失败',
+        message: '服务器错误',
+        type: 'error',
+        position: 'bottom-right'
+      })
+    }
   } catch (error) {
     console.log(error)
   }
-  console.log(res)
-  if (res.status === 200) {
-    router.push("/article/" + id.value)
-  } else {
-    ElNotification({
-      title: '上传失败',
-      message: '服务器错误',
-      type: 'error',
-      position: 'bottom-right'
-    })
-  }
+  // console.log(res)
+
 }
 const visable = ref(false)
 const deleteArticle= async ()=>{
@@ -242,8 +260,8 @@ const deleteArticle= async ()=>{
               <span style="font-weight: bold;">发布时间</span>
               <span>{{article.created_at}}</span>
               <div style="display: block">
-                <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="switchHandler" type="primary" style="width: 60px" >修改</el-button>
-                <el-button v-if="article.authorId === user.id.toString()" :disabled="editable" @click="visable=true" type="danger" style="width: 60px" >删除</el-button>
+                <el-button v-if="article.authorId === user.id.toString() || user.id ===1" :disabled="editable" @click="switchHandler" type="primary" style="width: 60px" >修改</el-button>
+                <el-button v-if="article.authorId === user.id.toString() || user.id ===1" :disabled="editable" @click="visable=true" type="danger" style="width: 60px" >删除</el-button>
               </div>
             </div>
 
@@ -262,10 +280,10 @@ const deleteArticle= async ()=>{
           </div>
           <div v-show="!isEditing" >
             <div>
-              <el-image :src="article.cover">
-
+              <el-image :src="local + '/api/v1/img/download/'+article.cover" style="width: 100%">
               </el-image>
             </div>
+            <br>
             <div id="article" >
 
             </div>

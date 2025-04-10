@@ -158,8 +158,6 @@ onMounted(()=>{
           </el-badge>
 
         </div>
-
-
         <div class="navbar-item has-dropdown is-hoverable" v-if="user.username!==''">
 
           <el-dropdown class="" :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, 0] } }] }">

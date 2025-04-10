@@ -43,8 +43,9 @@ const handleLogin = async () => {
     if (res.status === 200) {
         var jwtDecodeVal = jwtDecode(res.data.token);
         console.log(jwtDecodeVal)
-        user.setNew(res.data.token,res.data.username,'',jwtDecodeVal.id,)
+        user.setNew(res.data.token,res.data.username,'',jwtDecodeVal.UserId)
         localStorage.setItem("token",res.data.token);
+        localStorage.setItem("username",res.data.username);
         console.log("登录成功")
         Router.push("/")
     }

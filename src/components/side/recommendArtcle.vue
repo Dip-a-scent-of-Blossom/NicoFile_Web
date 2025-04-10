@@ -42,13 +42,13 @@ onMounted(async () => {
   <div class="recommendBar">
     <div class="recommendArtcle">
       <div class="recommendArtcle-title">
-        <h2 style="margin: 14px 0;padding-top: 14px">公告</h2>
+        <h2 style="margin: 14px 0;padding-top: 14px;text-align: center">公告</h2>
       </div>
       <div v-for="(item, index) in board" :key="item.id" style="margin: 4px 0">
         <div>
-          <router-link :to="'/article/'+item.id" class="recommendArtcle-item-title" >
+          <a :href="item.link" class="recommendArtcle-item-title" >
             <span >{{item.title}}</span>
-          </router-link>
+          </a>
         </div>
       </div>
       <div>
@@ -101,7 +101,7 @@ onMounted(async () => {
     <div class="recommendBar" style="padding-bottom: 24px;">
       <div class="recommendArtcle">
         <div class="recommendArtcle-title">
-          <h2 style="margin: 14px 0;padding-top: 14px">推荐文章</h2>
+          <h2 style="margin: 14px 0;padding-top: 14px;text-align: center">推荐文章</h2>
         </div>
         <div v-if="article.length>0">
 

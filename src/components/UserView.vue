@@ -242,7 +242,9 @@ onMounted(()=>{
                 </template>
                 <template #default>
                   <div>
-                    配置管理
+                    <span>
+                      没有权限=.=
+                    </span>
                   </div>
                 </template>
               </el-tab-pane>
@@ -253,10 +255,9 @@ onMounted(()=>{
                 </template>
                 <template #default>
                   <div>
-                    <div class="box">
-
-                    </div>
-                    文件管理
+                    <span>
+                      没有权限=.=
+                    </span>
                   </div>
                 </template>
               </el-tab-pane>

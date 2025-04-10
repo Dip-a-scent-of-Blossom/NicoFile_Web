@@ -114,18 +114,13 @@ export const uploadFileToServer = async (prefix,file, chunkNumber, fileName,_md5
     form.append("ext", ext);
     console.log(_md5,"chunkNumber: ",chunkNumber)
     var result
-    try{
-        result = await axios.post(prefix+"/api/v1/file/uploadchunk", form,{
-            headers: {
-                "Authorization":  localStorage.getItem("token"),
-            },
-        })
-        if (result.status === 499){
+    result = await axios.post(prefix+"/api/v1/file/uploadchunk", form,{
+        headers: {
+            "Authorization":  localStorage.getItem("token"),
+        },
+    })
+    if (result.status === 499){
 
-        }
-        return result
-    }catch (err) {
-        console.log(err)
     }
     return result
 }

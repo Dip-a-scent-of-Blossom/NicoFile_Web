@@ -98,7 +98,7 @@ onMounted(async () => {
             <el-button class="single-button"  size="default"   @click="()=>{download(local,user.getUserToken,item.path,item.name)}" style="padding-left: 2px;padding-right: 2px">
               <el-icon size=28 color="#40E0D0"><Download /></el-icon>
             </el-button>
-            <el-button  class="single-button"  size="default"  @click="async ()=>{await deletefile(local,item.id,auth);await GetFileList(currentPage.value)}" style="padding-left: 2px;padding-right: 2px" >
+            <el-button  class="single-button"  size="default"  @click="async ()=>{await deletefile(local,item.id,auth);await GetFileList(currentPage)}" style="padding-left: 2px;padding-right: 2px" >
               <el-icon size=28 color="#FF0000"><Delete /></el-icon>
             </el-button>
           </div>

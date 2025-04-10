@@ -133,6 +133,13 @@ const submit = async () => {
         console.log(result.data,result)
         progress.value = 0
         progressNow.value = ''
+        ElNotification(
+            {
+              title: '上传失败',
+              message: '网络错误',
+              type: 'error',
+              position: 'bottom-right'
+            })
         console.log("上传失败")
         useable.value = true
         return
@@ -149,7 +156,12 @@ const submit = async () => {
       uploading.value --
       return
     }
-    console.log("分片上传完成")
+    ElNotification({
+      title: '',
+      message: '分片上传完成',
+      type: 'success',
+      position: 'bottom-right'
+    })
     progress.value = 100
     progressNow.value = "上传完成"
     let res = await merge()

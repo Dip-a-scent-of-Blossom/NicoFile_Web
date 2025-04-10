@@ -31,6 +31,8 @@ const handleRegister =async () => {
       alert('注册成功')
       var jwtDecodeVal = jwtDecode(res.data.token);
       localStorage.setItem("token",res.data.token);
+      localStorage.setItem("username",res.data.username)
+      localStorage.setItem("id",jwtDecodeVal.UserId)
       Router.push("/")
     } else {
       alert('注册失败')
